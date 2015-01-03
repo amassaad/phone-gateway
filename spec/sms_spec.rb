@@ -27,18 +27,6 @@ describe 'SMS and Call Response Capabilities' do
 		expect(last_response.body).to eq('Hello Pandas! Have some ban-boo.')
 	end
 
-	# it "should respond plainly to no SMS" do
-	# 	get '/smsin'
-	# 	expect(last_response).to be_ok
-	# 	expect(last_response.body).to eq('No SMS.')
-	# end
-
-	# it "should accept Twilio SMS" do
-	# 	get "/smsin?ToCountry=CA&ToState=ON&SmsMessageSid=SM60c8870b5bd81d43f33a107c832b931f&NumMedia=0&ToCity=OTTAWA&FromZip=&SmsSid=SM60c8870b5bd81d43f33a107c832b931f&FromState=ON&SmsStatus=received&FromCity=OTTAWA&Body=Works+still+as+good+as+a+computer&FromCountry=CA&To=%2B16136996738&ToZip=&MessageSid=SM60c8870b5bd81d43f33a107c832b931f&AccountSid=AC4474fb44063b4118e729013bd9e9a5dd&From=%2B16138584587&ApiVersion=2010-04-01"
-	# 	expect(last_response).to be_ok
-	# 	expect(last_response.body).to eq('The sms arrived. Works still as good as a computer') 
-	# end
-
 	it "should Welcome you to York Street" do
 		get '/in-call'
 		expect(last_response).to be_ok

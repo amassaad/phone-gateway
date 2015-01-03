@@ -1,6 +1,6 @@
 require_relative 'helper'
 counter = 0
-root = "https://safe-gorge-6634.herokuapp.com"
+root = "https://york-phone-gateway.herokuapp.com/"
 
 get_or_post '/in-call' do
   account_sid = ENV['TSID']
@@ -55,7 +55,7 @@ get_or_post '/in-call/get' do
       end.text 
     when "2"
       Twilio::TwiML::Response.new do |r|
-        r.Gather :numDigits => '1', :action => 'https://safe-gorge-6634.herokuapp.com/in-call/extension', :method => 'post' do |g|
+        r.Gather :numDigits => '1', :action => root, :method => 'post' do |g|
           g.Say "Please enter your partys extension. Press 0 to return to the main menu"
         end
         r.Say "Sorry, I didn't get your response."
@@ -78,7 +78,7 @@ get_or_post '/in-call/get' do
       end.text 
     when "6"
       Twilio::TwiML::Response.new do |r|
-        r.Gather :numDigits => '4', :action => 'https://safe-gorge-6634.herokuapp.com/in-call/entrycode', :method => 'post' do |g|
+        r.Gather :numDigits => '4', :action => root, :method => 'post' do |g|
           g.Say "Please enter the secret code. Press 0 to return to the main menu"
         end
         r.Say "Sorry, I didn't get your response."
