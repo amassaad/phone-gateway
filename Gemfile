@@ -5,6 +5,7 @@ ruby '2.1.5'
 gem 'sinatra'
 gem 'twilio-ruby'
 gem 'thin'
+gem 'figaro'
 
 group :production do
 	gem 'newrelic_rpm'

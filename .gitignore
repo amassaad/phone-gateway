@@ -30,3 +30,5 @@ doc/
 /deployment/.vagrant
 Dockerfile
 codeship.pub
+# Ignore application configuration
+/config/application.yml

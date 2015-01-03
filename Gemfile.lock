@@ -25,6 +25,8 @@ GEM
     diff-lcs (1.2.5)
     erubis (2.7.0)
     eventmachine (1.0.4)
+    figaro (1.0.0)
+      thor (~> 0.14)
     i18n (0.7.0)
     json (1.8.1)
     jwt (1.0.0)
@@ -98,6 +100,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  figaro
   newrelic_rpm
   rack
   rack-test
