@@ -1,6 +1,5 @@
 require 'twilio-ruby'
 require 'sinatra'
-require_relative 'email'
 require_relative 'calls'
 
 configure do
