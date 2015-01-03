@@ -1,5 +1,3 @@
-# SCHEDULER = Rufus::Scheduler.new
-
 def self.get_or_post(url,&block)
   get(url,&block)
   post(url,&block)

@@ -5,7 +5,6 @@ ruby '2.1.5'
 gem 'sinatra'
 gem 'twilio-ruby'
 gem 'thin'
-gem 'rufus-scheduler'
 
 group :production do
 	gem 'newrelic_rpm'
