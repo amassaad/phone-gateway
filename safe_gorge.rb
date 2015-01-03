@@ -1,7 +1,5 @@
 require 'twilio-ruby'
 require 'sinatra'
-require 'mail'
-require 'rufus-scheduler'
 require_relative 'email'
 require_relative 'calls'
 

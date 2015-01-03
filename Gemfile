@@ -4,7 +4,6 @@ ruby '2.1.2'
 
 gem 'sinatra'
 gem 'twilio-ruby'
-gem 'mail'
 gem 'thin'
 gem 'rufus-scheduler'
 
