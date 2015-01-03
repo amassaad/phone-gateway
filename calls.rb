@@ -56,7 +56,7 @@ get_or_post '/in-call/get' do
     when "2"
       Twilio::TwiML::Response.new do |r|
         r.Gather :numDigits => '1', :action => root + '/in-call/extension', :method => 'post' do |g|
-          g.Say "Please enter your partys extension. Press 0 to return to the main menu"
+          g.Say "Please enter 2 again to continue or press 0 to return to the main menu"
         end
         r.Say "Sorry, I didn't get your response."
         r.Redirect root + "/in-call/get?Digits=2"
@@ -96,9 +96,11 @@ get_or_post '/in-call/get' do
 end
 
 get_or_post '/in-call/extension' do
+  redirect root + "/in-call/get" unless params['Digits'] == '2'
   Twilio::TwiML::Response.new do |r|
-    r.Say "I could connect you to someone live, but was this not fun? . . For no Press 1, for Yes please press 2. Yes?. or . . . no? Let's play again."
-    r.Redirect root + "/in-call/get"
+    r.Say "Attempting to connect you, please wait."
+    r.Dial ENV['CELL'] #hope this works
+    r.Say "The party you are trying to reach is unavailable or has hung up. Goodbye."
   end.text 
 end
 
