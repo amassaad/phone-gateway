@@ -55,7 +55,7 @@ describe 'SMS and Call Response Capabilities' do
 	it "should not fuck up option 2" do
 		get "/in-call/get?Digits=2"
 		expect(last_response).to be_ok
-		expect(last_response.body).to eq("<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Gather numDigits=\"1\" action=\"https://york-phone-gateway.herokuapp.com/in-call/extension\" method=\"post\"><Say>Please enter your partys extension. Press 0 to return to the main menu</Say></Gather><Say>Sorry, I didn't get your response.</Say><Redirect>https://york-phone-gateway.herokuapp.com/in-call/get?Digits=2</Redirect></Response>") 
+		expect(last_response.body).to eq("<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Gather numDigits=\"1\" action=\"https://york-phone-gateway.herokuapp.com/in-call/extension\" method=\"post\"><Say>Please enter 2 again to continue or press 0 to return to the main menu</Say></Gather><Say>Sorry, I didn't get your response.</Say><Redirect>https://york-phone-gateway.herokuapp.com/in-call/get?Digits=2</Redirect></Response>") 
 	end
 
 	it "should not fuck up option 3" do
