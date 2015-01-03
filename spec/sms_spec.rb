@@ -3,9 +3,9 @@ require 'rack/test'
 require 'timecop'
 
 set :environment, :test
-welcome_response = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Gather numDigits=\"1\" action=\"/in-call/get\" method=\"post\"><Say>Welcome to York Street. Deliveries, please press 5.\n        For a joke, press 1.\n        To speak to a person, press 2.\n        To check your future, press 3.\n        If you know anything else, at all. Please enter it now!</Say></Gather><Say>Sorry, I didn't get your response</Say><Redirect>https://safe-gorge-6634.herokuapp.com/in-call</Redirect></Response>"
+welcome_response = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Gather numDigits=\"1\" action=\"/in-call/get\" method=\"post\"><Say>Welcome to York Street. Deliveries, please press 5.\n        For a joke, press 1.\n        To speak to a person, press 2.\n        To check your future, press 3.\n        If you know anything else, at all. Please enter it now!</Say></Gather><Say>Sorry, I didn't get your response</Say><Redirect>https://york-phone-gateway.herokuapp.com/in-call</Redirect></Response>"
 
-
+root = ""
 describe 'SMS and Call Response Capabilities' do 
 	include Rack::Test::Methods
 
@@ -50,13 +50,13 @@ describe 'SMS and Call Response Capabilities' do
 		get "/in-call/get?Digits=1"
 		expect(last_response).to be_ok
 		expect(last_response.body).to eq("<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Say>Four fonts walk into a bar. the barman says Hey - get out! We dont want your type in here. 
-        A nurse says: Doctor, there is an invisible man in the waiting room. The Doctor says: Tell him I cant see him.</Say><Redirect>https://safe-gorge-6634.herokuapp.com/in-call</Redirect></Response>") 
+        A nurse says: Doctor, there is an invisible man in the waiting room. The Doctor says: Tell him I cant see him.</Say><Redirect>https://york-phone-gateway.herokuapp.com/in-call</Redirect></Response>") 
 	end
 
 	it "should not fuck up option 2" do
 		get "/in-call/get?Digits=2"
 		expect(last_response).to be_ok
-		expect(last_response.body).to eq("<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Gather numDigits=\"1\" action=\"https://safe-gorge-6634.herokuapp.com/in-call/extension\" method=\"post\"><Say>Please enter your partys extension. Press 0 to return to the main menu</Say></Gather><Say>Sorry, I didn't get your response.</Say><Redirect>https://safe-gorge-6634.herokuapp.com/in-call/get?Digits=2</Redirect></Response>") 
+		expect(last_response.body).to eq("<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Gather numDigits=\"1\" action=\"https://york-phone-gateway.herokuapp.com/in-call/extension\" method=\"post\"><Say>Please enter your partys extension. Press 0 to return to the main menu</Say></Gather><Say>Sorry, I didn't get your response.</Say><Redirect>https://york-phone-gateway.herokuapp.com/in-call/get?Digits=2</Redirect></Response>") 
 	end
 
 	it "should not fuck up option 3" do
@@ -68,19 +68,19 @@ describe 'SMS and Call Response Capabilities' do
 	it "should not fuck up option 4" do
 		get "/in-call/get?Digits=4"
 		expect(last_response).to be_ok
-		expect(last_response.body).to eq("<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Say>Four is a not yet built feature. Try again later? Lets start over</Say><Redirect>https://safe-gorge-6634.herokuapp.com/in-call</Redirect></Response>") 
+		expect(last_response.body).to eq("<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Say>Four is a not yet built feature. Try again later? Lets start over</Say><Redirect>https://york-phone-gateway.herokuapp.com/in-call</Redirect></Response>") 
 	end	
 
 	it "should not fuck up option 5" do
 		get "/in-call/get?Digits=5"
 		expect(last_response).to be_ok
-		expect(last_response.body).to eq("<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Say>Hello Delivery, I am not here right now but you may enter and drop off the package. Thanks and have a nice day</Say><Redirect>https://safe-gorge-6634.herokuapp.com/in-call/entrycode?Digits=4321</Redirect></Response>") 
+		expect(last_response.body).to eq("<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Say>Hello Delivery, I am not here right now but you may enter and drop off the package. Thanks and have a nice day</Say><Redirect>https://york-phone-gateway.herokuapp.com/in-call/entrycode?Digits=4321</Redirect></Response>") 
 	end
 
 	it "should definitely not fuck up option 6" do
 		get "/in-call/get?Digits=6"
 		expect(last_response).to be_ok
-		expect(last_response.body).to eq("<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Gather numDigits=\"4\" action=\"https://safe-gorge-6634.herokuapp.com/in-call/entrycode\" method=\"post\"><Say>Please enter the secret code. Press 0 to return to the main menu</Say></Gather><Say>Sorry, I didn't get your response.</Say><Redirect>https://safe-gorge-6634.herokuapp.com/in-call/get?Digits=6</Redirect></Response>") 
+		expect(last_response.body).to eq("<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Gather numDigits=\"4\" action=\"https://york-phone-gateway.herokuapp.com/in-call/entrycode\" method=\"post\"><Say>Please enter the secret code. Press 0 to return to the main menu</Say></Gather><Say>Sorry, I didn't get your response.</Say><Redirect>https://york-phone-gateway.herokuapp.com/in-call/get?Digits=6</Redirect></Response>") 
 	end
 
 	it "should handle the secret code properly" do
@@ -111,7 +111,7 @@ end
 describe 'Door Cleaning and time-based Response Capabilities' do 
 	include Rack::Test::Methods
 
-	cleaning_response = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Say>Hey, please enter.</Say><Redirect>https://safe-gorge-6634.herokuapp.com/in-call/entrycode?Digits=4321</Redirect><Say>Sorry, I didn't get your response</Say><Redirect>https://safe-gorge-6634.herokuapp.com/in-call</Redirect></Response>"
+	cleaning_response = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Say>Hey, please enter.</Say><Redirect>https://york-phone-gateway.herokuapp.com/in-call/entrycode?Digits=4321</Redirect><Say>Sorry, I didn't get your response</Say><Redirect>https://york-phone-gateway.herokuapp.com/in-call</Redirect></Response>"
 
 	def app
 		Sinatra::Application
