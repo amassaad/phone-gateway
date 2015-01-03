@@ -1,12 +1,11 @@
 source 'https://rubygems.org'
 
-ruby '2.1.2'
+ruby '2.1.5'
 
 gem 'sinatra'
 gem 'twilio-ruby'
-gem 'mail'
 gem 'thin'
-gem 'rufus-scheduler'
+gem 'figaro'
 
 group :production do
 	gem 'newrelic_rpm'

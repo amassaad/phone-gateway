@@ -29,5 +29,6 @@ doc/
 /deployment
 /deployment/.vagrant
 Dockerfile
-/config/newrelic.yml
 codeship.pub
+# Ignore application configuration
+/config/application.yml
