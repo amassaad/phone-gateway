@@ -9,6 +9,7 @@ SMS gateway
 
 * gem 'sinatra'
 * gem 'twilio-ruby'
+* gem 'figaro' for 12factor setup simplicity
 * heroku deployment
 * Get a Twilio account
 * I have now set this up to do almost nothing during development or test, so no texts fire off during le testing, we all love getting Twilio text messages.
