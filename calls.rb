@@ -43,7 +43,9 @@ get_or_post '/in-call' do
 end
 
 get_or_post '/in-call/get' do
+  
   if params['Digits']
+
     opts = params['Digits']
 
     case opts
