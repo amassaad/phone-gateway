@@ -50,10 +50,10 @@ get_or_post '/in-call/get' do
     when "1"
       Twilio::TwiML::Response.new do |r|
         r.Say "A guy walks into a bar and asks the bartender for a free drink. The bartender says
-         Ill give you a free drink if you can tell me a multi-level meta joke. So the guy says 
+         I will give you a free drink if you can tell me a multi-level met-uh joke. So the guy says 
          A guy walks into a bar and asks the bartender for a free drink. The bartender says 
-         Ill give you a free drink if you can tell me a meta joke. So the guy says A guy walks 
-         into a bar and asks the bartender for a free drink. The bartender says Ill give you a 
+         I will give you a free drink if you can tell me a met-uh joke. So the guy says A guy walks 
+         into a bar and asks the bartender for a free drink. The bartender says I will give you a 
          free drink if you can tell me a good joke. So the guy says What do you do when you see a 
           spaceman? You park, man. So the bartender gives him a free beer. So the bartender gives 
           him a free beer. So the bartender gives him a free beer."
