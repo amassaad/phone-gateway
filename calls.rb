@@ -49,8 +49,14 @@ get_or_post '/in-call/get' do
     case opts
     when "1"
       Twilio::TwiML::Response.new do |r|
-        r.Say "Four fonts walk into a bar. the barman says Hey - get out! We dont want your type in here. 
-        A nurse says: Doctor, there is an invisible man in the waiting room. The Doctor says: Tell him I cant see him."
+        r.Say "A guy walks into a bar and asks the bartender for a free drink. The bartender says
+         Ill give you a free drink if you can tell me a multi-level meta joke. So the guy says 
+         A guy walks into a bar and asks the bartender for a free drink. The bartender says 
+         Ill give you a free drink if you can tell me a meta joke. So the guy says A guy walks 
+         into a bar and asks the bartender for a free drink. The bartender says Ill give you a 
+         free drink if you can tell me a good joke. So the guy says What do you do when you see a 
+          spaceman? You park, man. So the bartender gives him a free beer. So the bartender gives 
+          him a free beer. So the bartender gives him a free beer."
         r.Redirect root + "/in-call"
       end.text 
     when "2"

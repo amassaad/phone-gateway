@@ -48,8 +48,7 @@ describe 'SMS and Call Response Capabilities' do
 	it "should not fuck up option 1" do
 		get "/in-call/get?Digits=1"
 		expect(last_response).to be_ok
-		expect(last_response.body).to eq("<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Say>Four fonts walk into a bar. the barman says Hey - get out! We dont want your type in here. 
-        A nurse says: Doctor, there is an invisible man in the waiting room. The Doctor says: Tell him I cant see him.</Say><Redirect>https://york-phone-gateway.herokuapp.com/in-call</Redirect></Response>") 
+		expect(last_response.body).to eq("<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Say>A guy walks into a bar and asks the bartender for a free drink. The bartender says\n         Ill give you a free drink if you can tell me a multi-level meta joke. So the guy says \n         A guy walks into a bar and asks the bartender for a free drink. The bartender says \n         Ill give you a free drink if you can tell me a meta joke. So the guy says A guy walks \n         into a bar and asks the bartender for a free drink. The bartender says Ill give you a \n         free drink if you can tell me a good joke. So the guy says What do you do when you see a \n          spaceman? You park, man. So the bartender gives him a free beer. So the bartender gives \n          him a free beer. So the bartender gives him a free beer.</Say><Redirect>https://york-phone-gateway.herokuapp.com/in-call</Redirect></Response>") 
 	end
 
 	it "should not fuck up option 2" do

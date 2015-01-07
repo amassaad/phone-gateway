@@ -100,13 +100,13 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  figaro
-  newrelic_rpm
-  rack
-  rack-test
-  rspec-rails
-  sinatra
-  thin
-  timecop
-  twilio-ruby
-  webrat
+  figaro (~> 1.0.0)
+  newrelic_rpm (~> 3.9.9.275)
+  rack (~> 1.6.0)
+  rack-test (~> 0.6.2)
+  rspec-rails (~> 3.1.0)
+  sinatra (~> 1.4.5)
+  thin (~> 1.6.3)
+  timecop (~> 0.7.1)
+  twilio-ruby (~> 3.14.2)
+  webrat (~> 0.7.3)
