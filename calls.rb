@@ -15,14 +15,15 @@ get_or_post '/in-call' do
         If you know anything else, at all. Please enter it now!"
 
   if Time.now.thursday?
-    if Time.now.hour.between?( 12, 13 )
+    # if Time.now.dst?
+    if Time.now.hour.between?( 13, 14 )
       if Time.now.min.between?( 42 , 59 ) or Time.now.min.between?( 0, 5 )
         puts "arrived"
         bypass = true
       end
     end
   end
-        
+
   Twilio::TwiML::Response.new do |r|
     if bypass
       r.Say "Hey, please enter."
@@ -43,7 +44,7 @@ get_or_post '/in-call' do
 end
 
 get_or_post '/in-call/get' do
-  
+
   if params['Digits']
 
     opts = params['Digits']
@@ -52,15 +53,15 @@ get_or_post '/in-call/get' do
     when "1"
       Twilio::TwiML::Response.new do |r|
         r.Say "A guy walks into a bar and asks the bartender for a free drink. The bartender says
-         I will give you a free drink if you can tell me a multi-level met-uh joke. So the guy says 
-         A guy walks into a bar and asks the bartender for a free drink. The bartender says 
-         I will give you a free drink if you can tell me a met-uh joke. So the guy says A guy walks 
-         into a bar and asks the bartender for a free drink. The bartender says I will give you a 
-         free drink if you can tell me a good joke. So the guy says What do you do when you see a 
-          spaceman? You park, man. So the bartender gives him a free beer. So the bartender gives 
+         I will give you a free drink if you can tell me a multi-level met-uh joke. So the guy says
+         A guy walks into a bar and asks the bartender for a free drink. The bartender says
+         I will give you a free drink if you can tell me a met-uh joke. So the guy says A guy walks
+         into a bar and asks the bartender for a free drink. The bartender says I will give you a
+         free drink if you can tell me a good joke. So the guy says What do you do when you see a
+          spaceman? You park, man. So the bartender gives him a free beer. So the bartender gives
           him a free beer. So the bartender gives him a free beer. The end. I hope that was worth it."
         r.Redirect root + "/in-call"
-      end.text 
+      end.text
     when "2"
       Twilio::TwiML::Response.new do |r|
         r.Gather :numDigits => '1', :action => root + '/in-call/extension', :method => 'post' do |g|
@@ -73,17 +74,17 @@ get_or_post '/in-call/get' do
       Twilio::TwiML::Response.new do |r|
         r.Say "You will be disconnected for your attitude towards the space-time continuum."
         r.Hangup
-      end.text 
+      end.text
     when "4"
       Twilio::TwiML::Response.new do |r|
         r.Say "Four is a not yet built feature. Try again later? Lets start over"
         r.Redirect root + "/in-call"
-      end.text 
-    when "5" 
+      end.text
+    when "5"
       Twilio::TwiML::Response.new do |r|
         r.Say "Hello Delivery, I am not here right now but you may enter and drop off the package. Thanks and have a nice day"
         r.Redirect root + "/in-call/entrycode?Digits=4321"
-      end.text 
+      end.text
     when "6"
       Twilio::TwiML::Response.new do |r|
         r.Gather :numDigits => '4', :action => root + '/in-call/entrycode', :method => 'post' do |g|
@@ -96,7 +97,7 @@ get_or_post '/in-call/get' do
       Twilio::TwiML::Response.new do |r|
         r.Say "Was this not fun? . . Let's play again."
         r.Redirect root + "/in-call/get"
-      end.text 
+      end.text
     end
   else
     "you got get method"
@@ -109,7 +110,7 @@ get_or_post '/in-call/extension' do
     r.Say "Attempting to connect you, please wait."
     r.Dial ENV['CELL'] #hope this works
     r.Say "The party you are trying to reach is unavailable or has hung up. Goodbye."
-  end.text 
+  end.text
 end
 
 get_or_post '/in-call/entrycode' do
@@ -124,13 +125,13 @@ get_or_post '/in-call/entrycode' do
       r.Say "Accepted."
       r.Play :digits => enter_tone
       sms_create("Your home code was used", ENV['CELL'])
-    end.text 
+    end.text
   elsif user_pushed.eql? guest_code
     Twilio::TwiML::Response.new do |r|
       r.Say "Thanks friend, that was accepted."
       r.Play :digits => enter_tone
       sms_create("Guest code was used", ENV['CELL'])
-    end.text 
+    end.text
   elsif user_pushed.eql? delivery_code
     Twilio::TwiML::Response.new do |r|
       r.Say "Thanks, door opening."
