@@ -3,7 +3,7 @@ require 'rack/test'
 require 'timecop'
 
 set :environment, :test
-welcome_response = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Gather numDigits=\"1\" action=\"/in-call/get\" method=\"post\"><Say>Welcome to York Street. Deliveries, please press 5.\n        For a joke, press 1.\n        To speak to a person, press 2.\n        To check your future, press 3.\n        If you know anything else, at all. Please enter it now!</Say></Gather><Say>Sorry, I didn't get your response</Say><Redirect>https://york-phone-gateway.herokuapp.com/in-call</Redirect></Response>"
+welcome_response = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Gather numDigits=\"1\" action=\"/in-call/get\" method=\"post\"><Say>Welcome to York Street. Deliveries, please press 1.\n        For a joke, press 5.\n        To speak to a person, press 2.\n        To check your future, press 3.\n        If you know anything else, at all. Please enter it now!</Say></Gather><Say>Sorry, I didn't get your response</Say><Redirect>https://york-phone-gateway.herokuapp.com/in-call</Redirect></Response>"
 
 describe 'SMS and Call Response Capabilities' do
 	include Rack::Test::Methods
@@ -45,8 +45,8 @@ describe 'SMS and Call Response Capabilities' do
 		expect(last_response.body).to eq('you got get method')
 	end
 
-	it "should not fuck up option 1" do
-		get "/in-call/get?Digits=1"
+	it "should not fuck up option 5" do
+		get "/in-call/get?Digits=5"
 		expect(last_response).to be_ok
 		# expect(last_response.body).to eq("<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Say>A guy walks into a bar and asks the bartender for a free drink. The bartender says\n I will give you a free drink if you can tell me a multi-level met-uh joke. So the guy says\n A guy walks into a bar and asks the bartender for a free drink. The bartender says\n I will give you a free drink if you can tell me a met-uh joke. So the guy says A guy walks\n into a bar and asks the bartender for a free drink. The bartender says I will give you a\n free drink if you can tell me a good joke. So the guy says What do you do when you see a\n spaceman? You park, man. So the bartender gives him a free beer. So the bartender gives\n him a free beer. So the bartender gives him a free beer. The end. I hope that was worth it.<Redirect>https://york-phone-gateway.herokuapp.com/in-call</Redirect></Response>")
 	end
@@ -69,10 +69,10 @@ describe 'SMS and Call Response Capabilities' do
 		expect(last_response.body).to eq("<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Say>Four is a not yet built feature. Try again later? Lets start over</Say><Redirect>https://york-phone-gateway.herokuapp.com/in-call</Redirect></Response>")
 	end
 
-	it "should not fuck up option 5" do
-		get "/in-call/get?Digits=5"
+	it "should not fuck up option 1" do
+		get "/in-call/get?Digits=1"
 		expect(last_response).to be_ok
-		expect(last_response.body).to eq("<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Say>Hello Delivery, I am not here right now but you may enter and drop off the package. Thanks and have a nice day</Say><Redirect>https://york-phone-gateway.herokuapp.com/in-call/entrycode?Digits=4321</Redirect></Response>")
+		expect(last_response.body).to eq("<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Say>You may enter, but I am not here. Thanks and have a nice day</Say><Redirect>https://york-phone-gateway.herokuapp.com/in-call/entrycode?Digits=8297</Redirect></Response>")
 	end
 
 	it "should definitely not fuck up option 6" do

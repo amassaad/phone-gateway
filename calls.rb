@@ -8,8 +8,8 @@ get_or_post '/in-call' do
   client = Twilio::REST::Client.new account_sid, auth_token
   bypass = false
 
-  options = "Welcome to York Street. Deliveries, please press 5.
-        For a joke, press 1.
+  options = "Welcome to York Street. Deliveries, please press 1.
+        For a joke, press 5.
         To speak to a person, press 2.
         To check your future, press 3.
         If you know anything else, at all. Please enter it now!"
@@ -50,7 +50,7 @@ get_or_post '/in-call/get' do
     opts = params['Digits']
 
     case opts
-    when "1"
+    when "5"
       Twilio::TwiML::Response.new do |r|
         r.Say "A guy walks into a bar and asks the bartender for a free drink. The bartender says
          I will give you a free drink if you can tell me a multi-level met-uh joke. So the guy says
@@ -80,10 +80,10 @@ get_or_post '/in-call/get' do
         r.Say "Four is a not yet built feature. Try again later? Lets start over"
         r.Redirect root + "/in-call"
       end.text
-    when "5"
+    when "1"
       Twilio::TwiML::Response.new do |r|
-        r.Say "Hello Delivery, I am not here right now but you may enter and drop off the package. Thanks and have a nice day"
-        r.Redirect root + "/in-call/entrycode?Digits=4321"
+        r.Say "You may enter, but I am not here. Thanks and have a nice day"
+        r.Redirect root + "/in-call/entrycode?Digits=8297"
       end.text
     when "6"
       Twilio::TwiML::Response.new do |r|
