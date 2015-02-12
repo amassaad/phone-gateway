@@ -17,8 +17,6 @@ get_or_post '/in-call' do
   if Time.now.thursday?
     # if Time.now.dst?
     if Time.now.getlocal("-05:00").hour.between?(8, 9)
-    # if Time.now.hour.between?( 13, 14 )
-      # if Time.now.getlocal("-05:00").minute.between?(42, 59) or Time.now.getlocal("-05:00").minute.between?( 0, 5 )
       if Time.now.min.between?( 42 , 59 ) or Time.now.min.between?( 0, 5 )
         puts "arrived"
         bypass = true
