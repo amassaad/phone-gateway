@@ -100,7 +100,10 @@ get_or_post '/in-call/get' do
       end.text
     end
   else
-    "you got get method"
+    Twilio::TwiML::Response.new do |r|
+      r.Say "Sorry, I didn't get your response"
+      r.Redirect root + "/in-call"
+    end.text
   end
 end
 
