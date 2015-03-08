@@ -42,7 +42,7 @@ describe 'SMS and Call Response Capabilities' do
 	it "should accept your options" do
 		get '/in-call/get'
 		expect(last_response).to be_ok
-		expect(last_response.body).to eq('you got get method')
+		expect(last_response.body).to eq("<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Say>Sorry, I didn't get your response</Say><Redirect>https://york-phone-gateway.herokuapp.com/in-call</Redirect></Response>")
 	end
 
 	it "should not fuck up option 5" do
