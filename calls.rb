@@ -1,12 +1,18 @@
 require_relative 'helper'
 counter = 0
 root = "https://york-phone-gateway.herokuapp.com"
+bypass = false
+
+get '/pizza' do
+  bypass= true
+  "OK."
+end
 
 get_or_post '/in-call' do
   account_sid = ENV['TSID']
   auth_token = ENV['TTOKEN']
   client = Twilio::REST::Client.new account_sid, auth_token
-  bypass = false
+
 
   options = "Welcome to York Street. Deliveries, please press 1.
         For a joke, press 5.
@@ -121,6 +127,7 @@ get_or_post '/in-call/entrycode' do
   guest_code = "4321"
   delivery_code = "8297"
   enter_tone = "www99"
+  bypass = false
 
   if user_pushed.eql? secret_code
     Twilio::TwiML::Response.new do |r|

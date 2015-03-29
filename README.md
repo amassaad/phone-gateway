@@ -3,14 +3,14 @@
 
 ### What is this repository for? ###
 
-SMS gateway
+SMS gateway, because I can't phone.
 
 ### How do I get set up? ###
 
 * gem 'sinatra'
 * gem 'twilio-ruby'
 * gem 'figaro' for 12factor setup simplicity
-* heroku deployment
+* heroku deployment, NR to ping and keep alive.
 * Get a Twilio account
 * I have now set this up to do almost nothing during development or test, so no texts fire off during le testing, we all love getting Twilio text messages.
 
