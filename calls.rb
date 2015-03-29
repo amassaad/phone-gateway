@@ -2,6 +2,7 @@ require_relative 'helper'
 counter = 0
 root = "https://york-phone-gateway.herokuapp.com"
 bypass = false
+dead_caller = 0
 
 get '/pizza' do
   bypass= true
@@ -9,6 +10,7 @@ get '/pizza' do
 end
 
 get_or_post '/in-call' do
+
   account_sid = ENV['TSID']
   auth_token = ENV['TTOKEN']
   client = Twilio::REST::Client.new account_sid, auth_token
@@ -28,7 +30,7 @@ get_or_post '/in-call' do
       end
     end
   end
-
+  dead_caller += 1
   Twilio::TwiML::Response.new do |r|
     if bypass
       r.Say "Hey, please enter."
@@ -44,7 +46,11 @@ get_or_post '/in-call' do
       end
     end
     r.Say "Sorry, I didn't get your response"
-    r.Redirect root + "/in-call"
+
+    unless dead_caller > 2
+      r.Redirect root + "/in-call"
+    end
+    r.hangup
   end.text
 end
 
