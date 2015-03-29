@@ -71,9 +71,12 @@ describe 'SMS and Call Response Handler' do
 	end
 
 	it "should not fuck up option 1" do
+		Timecop.freeze(Time.gm(2014, 2, 20, 13, 52, 1))
 		get "/in-call/get?Digits=1"
 		expect(last_response).to be_ok
-		expect(last_response.body).to eq("<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Say>You may enter, but I am not here. Thanks and have a nice day</Say><Redirect>https://york-phone-gateway.herokuapp.com/in-call/entrycode?Digits=8297</Redirect></Response>")
+		expect(last_response.body).to include("<Say>You may enter, but I am not here. Thanks and have a nice day</Say>")
+		expect(last_response.body).to include("<Redirect>https://york-phone-gateway.herokuapp.com/in-call/entrycode?Digits=8297</Redirect>")
+		Timecop.return
 	end
 
 	it "should definitely not fuck up option 6" do
