@@ -49,11 +49,7 @@ get_or_post '/in-call' do
     end
     r.Say "Sorry, I didn't get your response"
 
-    unless dead_caller > 2
-      r.Redirect root + "/in-call"
-    else
-      r.hangup
-    end
+    r.Redirect root + "/in-call"
   end.text
 end
 
