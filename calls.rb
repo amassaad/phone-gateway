@@ -6,9 +6,9 @@ dead_caller = 0
 
 get '/pizza' do
   bypass= true
-  "OK.
+  'OK.
 <img style="-webkit-user-select: none; cursor: zoom-in;" src="http://s39.podbean.com/pb/e09a5e5e97f39e037629984e822c88fd/552c31b8/data2/blogs60/675535/uploads/imagePizza.jpg" width="1092" height="650">
-  "
+  '
 end
 
 get_or_post '/in-call' do
