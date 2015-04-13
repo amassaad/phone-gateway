@@ -26,7 +26,7 @@ get_or_post '/in-call' do
   Twilio::TwiML::Response.new do |r|
     if bypass
       r.Say "Hey, please enter."
-      sms_create("The Thursday cleaning code was used.", ENV['CELL'])
+      sms_create("The bypass code was used.", ENV['CELL'])
       r.Redirect root + "/in-call/entrycode?Digits=4321"
     else
       if counter == 0
