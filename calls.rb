@@ -1,12 +1,22 @@
 require_relative 'helper'
 counter = 0
 root = "https://york-phone-gateway.herokuapp.com"
+bypass = false
+dead_caller = 0
+
+get '/pizza' do
+  bypass= true
+  "OK.
+<img style="-webkit-user-select: none; cursor: zoom-in;" src="http://s39.podbean.com/pb/e09a5e5e97f39e037629984e822c88fd/552c31b8/data2/blogs60/675535/uploads/imagePizza.jpg" width="1092" height="650">
+  "
+end
 
 get_or_post '/in-call' do
+
   account_sid = ENV['TSID']
   auth_token = ENV['TTOKEN']
   client = Twilio::REST::Client.new account_sid, auth_token
-  bypass = false
+
 
   options = "Welcome to York Street. Deliveries, please press 1.
         For a joke, press 5.
@@ -22,7 +32,7 @@ get_or_post '/in-call' do
       end
     end
   end
-
+  dead_caller += 1
   Twilio::TwiML::Response.new do |r|
     if bypass
       r.Say "Hey, please enter."
@@ -38,7 +48,12 @@ get_or_post '/in-call' do
       end
     end
     r.Say "Sorry, I didn't get your response"
-    r.Redirect root + "/in-call"
+
+    unless dead_caller > 2
+      r.Redirect root + "/in-call"
+    else
+      r.hangup
+    end
   end.text
 end
 
@@ -62,13 +77,21 @@ get_or_post '/in-call/get' do
         r.Redirect root + "/in-call"
       end.text
     when "2"
-      Twilio::TwiML::Response.new do |r|
-        r.Gather :numDigits => '1', :action => root + '/in-call/extension', :method => 'post' do |g|
-          g.Say "Press number 2 again to continue or press 0 to return to the main menu"
+      if Time.now.getlocal("-04:00").hour.between?(5, 22)
+        Twilio::TwiML::Response.new do |r|
+          r.Gather :numDigits => '1', :action => root + '/in-call/extension', :method => 'post' do |g|
+            g.Say "Press number 2 again to continue or press 0 to return to the main menu"
+          end
+          r.Say "Sorry, I didn't get your response."
+          r.Redirect root + "/in-call/get?Digits=2"
+        end.text
+      else
+        Twilio::TwiML::Response.new do |r|
+          r.Say "Sorry, its late here."
+          r.hangup
         end
-        r.Say "Sorry, I didn't get your response."
-        r.Redirect root + "/in-call/get?Digits=2"
-      end.text
+      end
+
     when "3"
       Twilio::TwiML::Response.new do |r|
         r.Say "You will be disconnected for your attitude towards the space-time continuum."
@@ -80,10 +103,17 @@ get_or_post '/in-call/get' do
         r.Redirect root + "/in-call"
       end.text
     when "1"
+    puts "option one time" + Time.now.getlocal("-04:00").to_s
       Twilio::TwiML::Response.new do |r|
-        r.Say "You may enter, but I am not here. Thanks and have a nice day"
-        r.Redirect root + "/in-call/entrycode?Digits=8297"
+        if Time.now.getlocal("-04:00").hour.between?(7, 19)
+          r.Say "You may enter, but I am not here. Thanks and have a nice day"
+          r.Redirect root + "/in-call/entrycode?Digits=8297"
+        else
+          r.Redirect root + "/in-call/get?Digits=2"
+        end
       end.text
+
+
     when "6"
       Twilio::TwiML::Response.new do |r|
         r.Gather :numDigits => '4', :action => root + '/in-call/entrycode', :method => 'post' do |g|
@@ -121,6 +151,7 @@ get_or_post '/in-call/entrycode' do
   guest_code = "4321"
   delivery_code = "8297"
   enter_tone = "www99"
+  bypass = false
 
   if user_pushed.eql? secret_code
     Twilio::TwiML::Response.new do |r|

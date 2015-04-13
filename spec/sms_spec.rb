@@ -3,9 +3,10 @@ require 'rack/test'
 require 'timecop'
 
 set :environment, :test
-welcome_response = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Gather numDigits=\"1\" action=\"/in-call/get\" method=\"post\"><Say>Welcome to York Street. Deliveries, please press 1.\n        For a joke, press 5.\n        To speak to a person, press 2.\n        To check your future, press 3.\n        If you know anything else, at all. Please enter it now!</Say></Gather><Say>Sorry, I didn't get your response</Say><Redirect>https://york-phone-gateway.herokuapp.com/in-call</Redirect></Response>"
+welcome_response1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Gather numDigits=\"1\" action=\"/in-call/get\" method=\"post\"><Say>Welcome to York Street. Deliveries, please press 1.\n        For a joke, press 5.\n        To speak to a person, press 2.\n        To check your future, press 3.\n        If you know anything else, at all. Please enter it now!</Say></Gather><Say>Sorry, I didn't get your response</Say><Redirect>https://york-phone-gateway.herokuapp.com/in-call</Redirect></Response>"
+welcome_response = "<Say>Welcome to York Street. Deliveries, please press 1."
 
-describe 'SMS and Call Response Capabilities' do
+describe 'SMS and Call Response Handler' do
 	include Rack::Test::Methods
 
 	before do
@@ -29,13 +30,13 @@ describe 'SMS and Call Response Capabilities' do
 	it "should Welcome you to York Street" do
 		get '/in-call'
 		expect(last_response).to be_ok
-		expect(last_response.body).to eq(welcome_response)
+		expect(last_response.body).to include(welcome_response)
 	end
 
 	it "should not just let you in when it is not cleaning time" do
 		get '/in-call'
 		expect(last_response).to be_ok
-		expect(last_response.body).to eq(welcome_response)
+		expect(last_response.body).to include(welcome_response)
 		puts "Now #{Time.now}"
 	end
 
@@ -70,9 +71,12 @@ describe 'SMS and Call Response Capabilities' do
 	end
 
 	it "should not fuck up option 1" do
+		Timecop.freeze(Time.gm(2014, 2, 20, 13, 52, 1))
 		get "/in-call/get?Digits=1"
 		expect(last_response).to be_ok
-		expect(last_response.body).to eq("<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Say>You may enter, but I am not here. Thanks and have a nice day</Say><Redirect>https://york-phone-gateway.herokuapp.com/in-call/entrycode?Digits=8297</Redirect></Response>")
+		expect(last_response.body).to include("<Say>You may enter, but I am not here. Thanks and have a nice day</Say>")
+		expect(last_response.body).to include("<Redirect>https://york-phone-gateway.herokuapp.com/in-call/entrycode?Digits=8297</Redirect>")
+		Timecop.return
 	end
 
 	it "should definitely not fuck up option 6" do
@@ -109,7 +113,7 @@ end
 describe 'Door Cleaning and time-based Response Capabilities' do
 	include Rack::Test::Methods
 
-	cleaning_response = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Say>Hey, please enter.</Say><Redirect>https://york-phone-gateway.herokuapp.com/in-call/entrycode?Digits=4321</Redirect><Say>Sorry, I didn't get your response</Say><Redirect>https://york-phone-gateway.herokuapp.com/in-call</Redirect></Response>"
+	cleaning_response = "Hey, please enter.</Say><Redirect>https://york-phone-gateway.herokuapp.com/in-call/entrycode?Digits=4321</Redirect>"
 
 	def app
 		Sinatra::Application
@@ -126,7 +130,9 @@ describe 'Door Cleaning and time-based Response Capabilities' do
 	it "should  just let you in when it is cleaning time" do
 		get '/in-call'
 		expect(last_response).to be_ok
-		expect(last_response.body).to eq(cleaning_response)
+		expect(last_response.body).to include(cleaning_response)
 		puts "Now #{Time.now}"
 	end
 end
+
+      
