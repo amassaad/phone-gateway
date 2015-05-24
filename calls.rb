@@ -35,7 +35,7 @@ get_or_post '/in-call' do
   dead_caller += 1
   Twilio::TwiML::Response.new do |r|
     if bypass
-      r.Say "Hey, please enter."
+      r.Say "Please enter."
       sms_create("The bypass code was used.", ENV['CELL'])
       r.Redirect root + "/in-call/entrycode?Digits=4321"
     else
@@ -157,7 +157,7 @@ get_or_post '/in-call/entrycode' do
     end.text
   elsif user_pushed.eql? guest_code
     Twilio::TwiML::Response.new do |r|
-      r.Say "Thanks friend, that was accepted."
+      r.Say "To the right."
       r.Play :digits => enter_tone
       sms_create("Guest code was used", ENV['CELL'])
     end.text

@@ -94,7 +94,7 @@ describe 'SMS and Call Response Handler' do
 	it "should handle the entry code properly" do
 		get "/in-call/entrycode?Digits=4321"
 		expect(last_response).to be_ok
-		expect(last_response.body).to eq("<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Say>Thanks friend, that was accepted.</Say><Play digits=\"www99\"/></Response>")
+		expect(last_response.body).to eq("<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Say>To the right.</Say><Play digits=\"www99\"/></Response>")
 	end
 
 	it "should handle the delivery code properly" do
@@ -113,7 +113,7 @@ end
 describe 'Door Cleaning and time-based Response Capabilities' do
 	include Rack::Test::Methods
 
-	cleaning_response = "Hey, please enter.</Say><Redirect>https://york-phone-gateway.herokuapp.com/in-call/entrycode?Digits=4321</Redirect>"
+	cleaning_response = "Please enter.</Say><Redirect>https://york-phone-gateway.herokuapp.com/in-call/entrycode?Digits=4321</Redirect>"
 
 	def app
 		Sinatra::Application
