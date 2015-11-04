@@ -1,11 +1,11 @@
 source 'https://rubygems.org'
 
-ruby '2.1.5'
+ruby '2.2.3'
 
 gem 'sinatra',          '~> 1.4.5'
-gem 'twilio-ruby',      '~> 3.14.2'
+gem 'twilio-ruby'
 gem 'thin',             '~> 1.6.3'
-gem 'figaro',           '~> 1.0.0'
+gem 'figaro'
 
 group :production do
 	gem 'newrelic_rpm',    '~> 3.9.9.275'

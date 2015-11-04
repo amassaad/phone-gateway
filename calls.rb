@@ -18,12 +18,6 @@ get_or_post '/in-call' do
   client = Twilio::REST::Client.new account_sid, auth_token
 
 
-  options = "Welcome to York Street. Deliveries, please press 1.
-        For a joke, press 5.
-        To speak to a person, press 2.
-        To check your future, press 3.
-        If you know anything else, at all. Please enter it now!"
-
   if Time.now.thursday?
     if Time.now.getlocal("-04:00").hour.between?(8, 9)
       if Time.now.min.between?( 42 , 59 ) or Time.now.min.between?( 0, 5 )
@@ -44,7 +38,7 @@ get_or_post '/in-call' do
         counter = counter + 1
       end
       r.Gather :numDigits => '1', :action => '/in-call/get', :method => 'post' do |g|
-        g.Say options
+        g.Play s3_url("welcome_to_york.wav")
       end
     end
     r.Say "Sorry, I didn't get your response"
@@ -174,3 +168,10 @@ get_or_post '/in-call/entrycode' do
     end.text
   end
 end
+
+private
+
+  #https://s3-us-west-2.amazonaws.com/yorkphonegateway/welcome_to_york.wav
+  def s3_url(wav)
+    "https://s3-us-west-2.amazonaws.com/yorkphonegateway/#{wav}"
+  end
