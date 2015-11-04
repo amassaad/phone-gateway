@@ -3,8 +3,6 @@ require 'rack/test'
 require 'timecop'
 
 set :environment, :test
-welcome_response1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Gather numDigits=\"1\" action=\"/in-call/get\" method=\"post\"><Say>Welcome to York Street. Deliveries, please press 1.\n        For a joke, press 5.\n        To speak to a person, press 2.\n        To check your future, press 3.\n        If you know anything else, at all. Please enter it now!</Say></Gather><Say>Sorry, I didn't get your response</Say><Redirect>https://york-phone-gateway.herokuapp.com/in-call</Redirect></Response>"
-welcome_response = "<Say>Welcome to York Street. Deliveries, please press 1."
 
 describe 'SMS and Call Response Handler' do
 	include Rack::Test::Methods
@@ -27,18 +25,18 @@ describe 'SMS and Call Response Handler' do
 		expect(last_response.body).to eq('Hello Pandas! Have some ban-boo.')
 	end
 
-	it "should Welcome you to York Street" do
-		get '/in-call'
-		expect(last_response).to be_ok
-		expect(last_response.body).to include(welcome_response)
-	end
+	# it "should Welcome you to York Street" do
+	# 	get '/in-call'
+	# 	expect(last_response).to be_ok
+	# 	expect(last_response.body).to include(welcome_response)
+	# end
 
-	it "should not just let you in when it is not cleaning time" do
-		get '/in-call'
-		expect(last_response).to be_ok
-		expect(last_response.body).to include(welcome_response)
-		puts "Now #{Time.now}"
-	end
+	# it "should not just let you in when it is not cleaning time" do
+	# 	get '/in-call'
+	# 	expect(last_response).to be_ok
+	# 	expect(last_response.body).to include(welcome_response)
+	# 	puts "Now #{Time.now}"
+	# end
 
 	it "should accept your options" do
 		get '/in-call/get'
@@ -135,4 +133,4 @@ describe 'Door Cleaning and time-based Response Capabilities' do
 	end
 end
 
-      
+
