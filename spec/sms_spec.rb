@@ -3,7 +3,8 @@ require 'rack/test'
 require 'timecop'
 
 set :environment, :test
-welcome_response1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Gather numDigits=\"1\" action=\"/in-call/get\" method=\"post\"><Say>Welcome to York Street. Deliveries, please press 1.\n        For a joke, press 5.\n        To speak to a person, press 2.\n        To check your future, press 3.\n        If you know anything else, at all. Please enter it now!</Say></Gather><Say>Sorry, I didn't get your response</Say><Redirect>https://york-phone-gateway.herokuapp.com/in-call</Redirect></Response>"
+welcome_response1 = "
+<?xml version="1.0" encoding="UTF-8"?><Response><Gather numDigits="1" action="/in-call/get" method="post"><Play>https://s3-us-west-2.amazonaws.com/yorkphonegateway/welcome_to_york.wav</Play></Gather><Say>Sorry, I didn't get your response</Say><Redirect>https://york-phone-gateway.herokuapp.com/in-call</Redirect></Response>"
 welcome_response = "<Say>Welcome to York Street. Deliveries, please press 1."
 
 describe 'SMS and Call Response Handler' do
@@ -135,4 +136,4 @@ describe 'Door Cleaning and time-based Response Capabilities' do
 	end
 end
 
-      
+
