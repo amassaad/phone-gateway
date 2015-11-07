@@ -17,16 +17,13 @@ get_or_post '/in-call' do
   auth_token = ENV['TTOKEN']
   client = Twilio::REST::Client.new account_sid, auth_token
 
-
-  if Time.now.thursday?
-    if Time.now.getlocal("-04:00").hour.between?(8, 9)
-      if Time.now.min.between?( 42 , 59 ) or Time.now.min.between?( 0, 5 )
-        puts "arrived"
-        bypass = true
-      end
-    end
+  if Time.now.thursday? && Time.now.getlocal("-04:00").hour.between?(8, 9) && Time.now.min.between?( 42 , 59 ) or Time.now.min.between?( 0, 5 )
+    puts "arrived"
+    bypass = true
   end
+
   dead_caller += 1
+
   Twilio::TwiML::Response.new do |r|
     if bypass
       r.Say "Please enter."
@@ -38,7 +35,7 @@ get_or_post '/in-call' do
         counter = counter + 1
       end
       r.Gather :numDigits => '1', :action => '/in-call/get', :method => 'post' do |g|
-        g.Play s3_url("welcome_to_york.wav")
+        g.Play s3_url("welcome_to_york")
       end
     end
     r.Say "Sorry, I didn't get your response"
@@ -56,23 +53,16 @@ get_or_post '/in-call/get' do
     case opts
     when "5"
       Twilio::TwiML::Response.new do |r|
-        r.Say "A guy walks into a bar and asks the bartender for a free drink. The bartender says
-         I will give you a free drink if you can tell me a multi-level met-uh joke. So the guy says
-         A guy walks into a bar and asks the bartender for a free drink. The bartender says
-         I will give you a free drink if you can tell me a met-uh joke. So the guy says A guy walks
-         into a bar and asks the bartender for a free drink. The bartender says I will give you a
-         free drink if you can tell me a good joke. So the guy says What do you do when you see a
-          spaceman? You park, man. So the bartender gives him a free beer. So the bartender gives
-          him a free beer. So the bartender gives him a free beer. The end. I hope that was worth it."
+        r.Play s3_url("joke.wav")
         r.Redirect root + "/in-call"
       end.text
     when "2"
       if Time.now.getlocal("-04:00").hour.between?(5, 22)
         Twilio::TwiML::Response.new do |r|
           r.Gather :numDigits => '1', :action => root + '/in-call/extension', :method => 'post' do |g|
-            g.Say "Press number 2 again to continue or press 0 to return to the main menu"
+            g.Play s3_url("press_2_again_to_continue")
           end
-          r.Say "Sorry, I didn't get your response."
+          r.Play s3_url("sorry_I_didnt_get_your_response")
           r.Redirect root + "/in-call/get?Digits=2"
         end.text
       else
@@ -84,19 +74,19 @@ get_or_post '/in-call/get' do
 
     when "3"
       Twilio::TwiML::Response.new do |r|
-        r.Say "You will be disconnected for your attitude towards the space-time continuum."
+        r.Play s3_url("you_will_be_disconnected")
         r.Hangup
       end.text
     when "4"
       Twilio::TwiML::Response.new do |r|
-        r.Say "Four is a not yet built feature. Try again later? Lets start over"
+        r.Play s3_url("option_four_is_not_yet_built")
         r.Redirect root + "/in-call"
       end.text
     when "1"
     puts "option one time" + Time.now.getlocal("-04:00").to_s
       Twilio::TwiML::Response.new do |r|
         if Time.now.getlocal("-04:00").hour.between?(7, 19)
-          r.Say "You may enter, but I am not here. Thanks and have a nice day"
+          r.Play s3_url("you_may_enter_but_I_am_not_home_now")
           r.Redirect root + "/in-call/entrycode?Digits=8297"
         else
           r.Redirect root + "/in-call/get?Digits=2"
@@ -107,9 +97,10 @@ get_or_post '/in-call/get' do
     when "6"
       Twilio::TwiML::Response.new do |r|
         r.Gather :numDigits => '4', :action => root + '/in-call/entrycode', :method => 'post' do |g|
-          g.Say "Please enter the secret code. Press 0 to return to the main menu"
+          g.Play s3_url("please_enter_the_secret_code")
         end
-        r.Say "Sorry, I didn't get your response."
+        r.Play s3_url("sorry_I_didnt_get_your_response")
+
         r.Redirect root + "/in-call/get?Digits=6"
       end.text
     else
@@ -120,7 +111,7 @@ get_or_post '/in-call/get' do
     end
   else
     Twilio::TwiML::Response.new do |r|
-      r.Say "Sorry, I didn't get your response"
+      r.Play s3_url("sorry_I_didnt_get_your_response")
       r.Redirect root + "/in-call"
     end.text
   end
@@ -173,5 +164,5 @@ private
 
   #https://s3-us-west-2.amazonaws.com/yorkphonegateway/welcome_to_york.wav
   def s3_url(wav)
-    "https://s3-us-west-2.amazonaws.com/yorkphonegateway/#{wav}"
+    "https://s3-us-west-2.amazonaws.com/yorkphonegateway/#{wav}.wav"
   end
