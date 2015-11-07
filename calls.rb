@@ -5,23 +5,18 @@ bypass = false
 dead_caller = 0
 
 get '/pizza' do
-  bypass= true
+  bypass = true
   'OK.
 <img style="-webkit-user-select: none; cursor: zoom-in;" src="https://cdn.shopify.com/s/files/1/0196/8346/files/Supreme_pizza.png?7139639298543844503">
   '
 end
 
 get_or_post '/in-call' do
-
-  account_sid = ENV['TSID']
-  auth_token = ENV['TTOKEN']
-
+  dead_caller += 1
   if Time.now.thursday? && Time.now.getlocal("-04:00").hour.between?(8, 9) && Time.now.min.between?( 42 , 59 ) or Time.now.min.between?( 0, 5 )
     puts "arrived"
     bypass = true
   end
-
-  dead_caller += 1
 
   Twilio::TwiML::Response.new do |r|
     if bypass
@@ -31,7 +26,7 @@ get_or_post '/in-call' do
     else
       if counter == 0
         sms_create("The door was buzzed.", ENV['CELL'])
-        counter = counter + 1
+        counter += 1
       end
       r.Gather :numDigits => '1', :action => '/in-call/get', :method => 'post' do |g|
         g.Play s3_url("welcome_to_york")
@@ -44,11 +39,8 @@ get_or_post '/in-call' do
 end
 
 get_or_post '/in-call/get' do
-
   if params['Digits']
-
     opts = params['Digits']
-
     case opts
     when "1"
     puts "option one time" + Time.now.getlocal("-04:00").to_s
@@ -158,8 +150,6 @@ get_or_post '/in-call/entrycode' do
 end
 
 private
-
-  #https://s3-us-west-2.amazonaws.com/yorkphonegateway/welcome_to_york.wav
-  def s3_url(wav)
-    "https://s3-us-west-2.amazonaws.com/yorkphonegateway/#{wav}.wav"
+  def s3_url(name)
+    "https://s3-us-west-2.amazonaws.com/yorkphonegateway/#{name}.wav"
   end
