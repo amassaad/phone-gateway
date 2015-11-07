@@ -15,7 +15,6 @@ get_or_post '/in-call' do
 
   account_sid = ENV['TSID']
   auth_token = ENV['TTOKEN']
-  client = Twilio::REST::Client.new account_sid, auth_token
 
   if Time.now.thursday? && Time.now.getlocal("-04:00").hour.between?(8, 9) && Time.now.min.between?( 42 , 59 ) or Time.now.min.between?( 0, 5 )
     puts "arrived"
@@ -51,10 +50,15 @@ get_or_post '/in-call/get' do
     opts = params['Digits']
 
     case opts
-    when "5"
+    when "1"
+    puts "option one time" + Time.now.getlocal("-04:00").to_s
       Twilio::TwiML::Response.new do |r|
-        r.Play s3_url("joke")
-        r.Redirect root + "/in-call"
+        if Time.now.getlocal("-04:00").hour.between?(7, 19)
+          r.Play s3_url("you_may_enter_but_I_am_not_home_now")
+          r.Redirect root + "/in-call/entrycode?Digits=8297"
+        else
+          r.Redirect root + "/in-call/get?Digits=2"
+        end
       end.text
     when "2"
       if Time.now.getlocal("-04:00").hour.between?(5, 22)
@@ -71,7 +75,6 @@ get_or_post '/in-call/get' do
           r.hangup
         end
       end
-
     when "3"
       Twilio::TwiML::Response.new do |r|
         r.Play s3_url("you_will_be_disconnected")
@@ -82,25 +85,19 @@ get_or_post '/in-call/get' do
         r.Play s3_url("option_four_is_not_yet_built")
         r.Redirect root + "/in-call"
       end.text
-    when "1"
-    puts "option one time" + Time.now.getlocal("-04:00").to_s
+    when "5"
       Twilio::TwiML::Response.new do |r|
-        if Time.now.getlocal("-04:00").hour.between?(7, 19)
-          r.Play s3_url("you_may_enter_but_I_am_not_home_now")
-          r.Redirect root + "/in-call/entrycode?Digits=8297"
-        else
-          r.Redirect root + "/in-call/get?Digits=2"
-        end
+         sms_create("Heh, hehe.", ENV['CELL'])
+        r.Play s3_url("joke")
+         sms_create("Hahaha.", ENV['CELL'])
+        r.Redirect root + "/in-call"
       end.text
-
-
     when "6"
       Twilio::TwiML::Response.new do |r|
         r.Gather :numDigits => '4', :action => root + '/in-call/entrycode', :method => 'post' do |g|
           g.Play s3_url("please_enter_the_secret_code")
         end
         r.Play s3_url("sorry_I_didnt_get_your_response")
-
         r.Redirect root + "/in-call/get?Digits=6"
       end.text
     else
