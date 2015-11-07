@@ -53,7 +53,7 @@ get_or_post '/in-call/get' do
     case opts
     when "5"
       Twilio::TwiML::Response.new do |r|
-        r.Play s3_url("joke.wav")
+        r.Play s3_url("joke")
         r.Redirect root + "/in-call"
       end.text
     when "2"
