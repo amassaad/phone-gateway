@@ -13,7 +13,7 @@ end
 
 get_or_post '/in-call' do
   dead_caller += 1
-  if Time.now.thursday? && Time.now.getlocal("-05:00").hour.between?(8, 9) && Time.now.min.between?( 42 , 59 ) or Time.now.min.between?( 0, 5 )
+  if Time.now.thursday? && Time.now.getlocal("-04:00").hour.between?(8, 9) && Time.now.min.between?( 42 , 59 ) or Time.now.min.between?( 0, 5 )
     puts "arrived"
     bypass = true
   end
@@ -43,9 +43,9 @@ get_or_post '/in-call/get' do
     opts = params['Digits']
     case opts
     when "1"
-    puts "option one time" + Time.now.getlocal("-05:00").to_s
+    puts "option one time" + Time.now.getlocal("-04:00").to_s
       Twilio::TwiML::Response.new do |r|
-        if Time.now.getlocal("-05:00").hour.between?(7, 19)
+        if Time.now.getlocal("-04:00").hour.between?(7, 19)
           r.Play s3_url("you_may_enter_but_I_am_not_home_now")
           r.Redirect root + "/in-call/entrycode?Digits=8297"
         else
@@ -53,7 +53,7 @@ get_or_post '/in-call/get' do
         end
       end.text
     when "2"
-      if Time.now.getlocal("-05:00").hour.between?(5, 22)
+      if Time.now.getlocal("-04:00").hour.between?(5, 22)
         Twilio::TwiML::Response.new do |r|
           r.Gather :numDigits => '1', :action => root + '/in-call/extension', :method => 'post' do |g|
             g.Play s3_url("press_2_again_to_continue")
