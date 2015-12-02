@@ -11,6 +11,11 @@ get '/pizza' do
   '
 end
 
+get_or_post '/close' do
+  bypass = true
+  'OK'
+end
+
 get_or_post '/in-call' do
   dead_caller += 1
   if Time.now.thursday? && Time.now.getlocal("-05:00").hour.between?(8, 9) && Time.now.min.between?( 42 , 59 ) or Time.now.min.between?( 0, 5 )
