@@ -53,8 +53,10 @@ get_or_post '/in-call/get' do
         if Time.now.getlocal("-04:00").hour.between?(7, 19)
           r.Play s3_url("you_may_enter_but_I_am_not_home_now")
           r.Redirect root + "/in-call/entrycode?Digits=8297"
+          bypass = false
         else
           r.Redirect root + "/in-call/get?Digits=2"
+          bypass = false
         end
       end.text
     when "2"
@@ -115,7 +117,7 @@ get_or_post '/in-call/extension' do
   redirect root + "/in-call/get" unless params['Digits'] == '2'
   Twilio::TwiML::Response.new do |r|
     r.Say "Attempting to connect you, please wait."
-    r.Dial ENV['CELL'] #hope this works
+    r.Dial ENV['CELL']
     r.Say "The party you are trying to reach is unavailable or has hung up. Goodbye."
   end.text
 end
