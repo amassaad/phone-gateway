@@ -11,8 +11,8 @@ get '/pizza' do
   '
 end
 
-get '/close' do
-  bypass = try
+get_or_post '/close' do
+  bypass = true
   'OK'
 end
 
