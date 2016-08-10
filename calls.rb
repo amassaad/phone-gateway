@@ -27,7 +27,9 @@ get_or_post '/in-call' do
     if bypass
       r.Say "Please enter."
       sms_create("The bypass code was used.", ENV['CELL'])
+      sms_create("The bypass code was used.", ENV['V_CELL'])
       r.Redirect root + "/in-call/entrycode?Digits=4321"
+      break
     else
       if counter == 0
         sms_create("The door was buzzed.", ENV['CELL'])
