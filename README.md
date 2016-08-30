@@ -1,5 +1,6 @@
-# Welcome, the build status is here:  [ ![Codeship Status for amassaad/phone-gateway](https://codeship.com/projects/c1193290-759a-0132-c61e-22ab3bab314c/status?branch=master)](https://codeship.com/projects/55171) #
+# Welcome, the build status is here:
 
+[![CircleCI](https://circleci.com/gh/amassaad/phone-gateway.svg?style=svg)](https://circleci.com/gh/amassaad/phone-gateway)
 
 ### What is this repository for? ###
 
