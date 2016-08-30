@@ -8,7 +8,8 @@ gem 'thin',             '~> 1.6.3'
 gem 'figaro'
 
 group :production do
-	gem 'newrelic_rpm',    '~> 3.9.9.275'
+	gem 'newrelic_rpm'
+  gem 'rails_12factor'
 end
 
 group :development, :test do

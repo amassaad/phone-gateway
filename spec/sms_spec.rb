@@ -25,7 +25,7 @@ describe 'SMS and Call Response Handler' do
 		expect(last_response.body).to eq('Hello Pandas! Have some ban-boo.')
 	end
 
-	it "should not fuck up option 5" do
+r	it "should not fuck up option 5" do
 		get "/in-call/get?Digits=5"
 		expect(last_response).to be_ok
 	end
