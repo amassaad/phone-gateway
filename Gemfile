@@ -8,7 +8,7 @@ gem 'thin',             '~> 1.6.3'
 gem 'figaro'
 
 group :production do
-	gem 'newrelic_rpm'
+  gem 'newrelic_rpm'
   gem 'rails_12factor'
 end
 
