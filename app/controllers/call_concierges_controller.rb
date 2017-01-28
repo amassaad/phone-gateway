@@ -21,27 +21,27 @@ class CallConciergesController < ApplicationController
     @dead_caller = 1
 
     if Time.now.thursday? && Time.now.getlocal("-05:00").hour.between?(8, 9) && Time.now.min.between?( 42 , 59 ) or Time.now.min.between?( 0, 5 )
-      puts "arrived"
+      puts 'arrived'
       bypass = true
     end
 
     Twilio::TwiML::Response.new do |r|
       if bypass
-        r.Say "Please enter."
-        # sms_create("The bypass code was used.", ENV['CELL'])
-        r.Redirect ROOT_PATH + "/call_concierges/entry_code?Digits=4321"
+        r.Say 'Please enter.'
+        sms_create('The bypass code was used.', ENV['CELL'])
+        r.Redirect ROOT_PATH + '/call_concierges/entry_code?Digits=4321'
       else
         if @counter == 0
-          # sms_create("The door was buzzed.", ENV['CELL'])
+          sms_create('The door was buzzed.', ENV['CELL'])
           @counter += 1
         end
-        r.Gather :numDigits => '1', :action => '/in-call/get', :method => 'post' do |g|
-          g.Play s3_url("welcome_to_york")
+        r.Gather :numDigits => '1', :action => '/call_concierges/inboud_call_handler', :method => 'get' do |g|
+          g.Play s3_url('welcome_to_york')
         end
       end
-      r.Say "Sorry, I didn't get your response"
+      r.Say 'Sorry, I didnt get your response'
 
-      r.Redirect ROOT_PATH + "/call_concierges/inboud_call_handler"
+      r.Redirect ROOT_PATH + '/call_concierges/inboud_call_handler'
     end.text
   end
 
@@ -49,26 +49,25 @@ class CallConciergesController < ApplicationController
     if params['Digits']
       opts = params['Digits']
       case opts
-      when "1"
-      puts "option one time" + Time.now.getlocal("-05:00").to_s
+      when '1'
         Twilio::TwiML::Response.new do |r|
-          if Time.now.getlocal("-05:00").hour.between?(7, 19)
-            r.Play s3_url("you_may_enter_but_I_am_not_home_now")
-            r.Redirect ROOT_PATH + "/in-call/entrycode?Digits=8297"
+          if Time.now.getlocal('-05:00').hour.between?(7, 19)
+            r.Play s3_url('you_may_enter_but_I_am_not_home_now')
+            r.Redirect ROOT_PATH + '/call_concierges/entry_code?Digits=8297'
             @bypass = false
           else
-            r.Redirect ROOT_PATH + "/in-call/get?Digits=2"
+            r.Redirect ROOT_PATH + '/call_concierges/entry_code?Digits=2'
             @bypass = false
           end
         end.text
       when "2"
-        if Time.now.getlocal("-05:00").hour.between?(5, 22)
+        if Time.now.getlocal('-05:00').hour.between?(5, 22)
           Twilio::TwiML::Response.new do |r|
-            r.Gather :numDigits => '1', :action => ROOT_PATH + '/in-call/extension', :method => 'post' do |g|
-              g.Play s3_url("press_2_again_to_continue")
+            r.Gather :numDigits => '1', :action => ROOT_PATH + '/call_concierges/extension', :method => 'get' do |g|
+              g.Play s3_url('press_2_again_to_continue')
             end
-            r.Play s3_url("sorry_I_didnt_get_your_response")
-            r.Redirect ROOT_PATH + "/in-call/get?Digits=2"
+            r.Play s3_url('sorry_I_didnt_get_your_response')
+            r.Redirect ROOT_PATH + '/call_concierges/inboud_call_handler?Digits=2'
           end.text
         else
           Twilio::TwiML::Response.new do |r|
@@ -78,84 +77,84 @@ class CallConciergesController < ApplicationController
         end
       when "3"
         Twilio::TwiML::Response.new do |r|
-          r.Play s3_url("you_will_be_disconnected")
+          r.Play s3_url('you_will_be_disconnected')
           r.Hangup
         end.text
-      when "4"
+      when '4'
         Twilio::TwiML::Response.new do |r|
-          r.Play s3_url("option_four_is_not_yet_built")
-          r.Redirect ROOT_PATH + "/in-call"
+          r.Play s3_url('option_four_is_not_yet_built')
+          r.Redirect ROOT_PATH + '/call_concierges/inbound_call'
         end.text
-      when "5"
+      when '5'
         Twilio::TwiML::Response.new do |r|
-           sms_create("Heh, hehe.", ENV['CELL'])
-          r.Play s3_url("joke")
-           # sms_create("Hahaha.", ENV['CELL'])
-          r.Redirect ROOT_PATH + "/in-call"
+           # sms_create('Heh, hehe.', ENV['CELL'])
+          r.Play s3_url('joke')
+           # sms_create('Hahaha.', ENV['CELL'])
+          r.Redirect ROOT_PATH + '/call_concierges/inbound_call'
         end.text
-      when "6"
+      when '6'
         Twilio::TwiML::Response.new do |r|
-          r.Gather :numDigits => '4', :action => ROOT_PATH + '/in-call/entrycode', :method => 'post' do |g|
-            g.Play s3_url("please_enter_the_secret_code")
+          r.Gather :numDigits => '4', :action => ROOT_PATH + '/call_concierges/entry_code', :method => 'get' do |g|
+            g.Play s3_url('please_enter_the_secret_code')
           end
-          r.Play s3_url("sorry_I_didnt_get_your_response")
-          r.Redirect ROOT_PATH + "/in-call/get?Digits=6"
+          r.Play s3_url('sorry_I_didnt_get_your_response')
+          r.Redirect ROOT_PATH + '/call_concierges/inboud_call_handler?Digits=6'
         end.text
       else
         Twilio::TwiML::Response.new do |r|
           r.Say "Was this not fun? . . Let's play again."
-          r.Redirect ROOT_PATH + "/in-call/get"
+          r.Redirect ROOT_PATH + '/call_concierges/inboud_call_handler'
         end.text
       end
     else
       Twilio::TwiML::Response.new do |r|
-        r.Play s3_url("sorry_I_didnt_get_your_response")
-        r.Redirect ROOT_PATH + "/in-call"
+        r.Play s3_url('sorry_I_didnt_get_your_response')
+        r.Redirect ROOT_PATH + '/call_concierges/inbound_call'
       end.text
     end
   end
 
   def extension
     unless params['Digits'] == '2'
-      redirect_to ROOT_PATH + "/in-call/get"
+      redirect_to ROOT_PATH + '/call_concierges/inboud_call_handler'
       Twilio::TwiML::Response.new do |r|
-        r.Say "Attempting to connect you, please wait."
+        r.Say 'Attempting to connect you, please wait.'
         r.Dial ENV['CELL']
-        r.Say "The party you are trying to reach is unavailable or has hung up. Goodbye."
+        r.Say 'The party you are trying to reach is unavailable or has hung up. Goodbye.'
       end.text
     end
   end
 
   def entry_code
     user_pushed = params['Digits']
-    secret_code = "1394"
-    guest_code = "4321"
-    delivery_code = "8297"
-    enter_tone = "www99"
+    secret_code = '1394'
+    guest_code = '4321'
+    delivery_code = '8297'
+    enter_tone = 'www99'
     @bypass = false
 
     if user_pushed.eql? secret_code
       Twilio::TwiML::Response.new do |r|
-        r.Say "Accepted."
+        r.Say 'Accepted.'
         r.Play :digits => enter_tone
-        # sms_create("Your home code was used", ENV['CELL'])
+        # sms_create('Your home code was used', ENV['CELL'])
       end.text
     elsif user_pushed.eql? guest_code
       Twilio::TwiML::Response.new do |r|
-        r.Say "To the right."
+        r.Say 'To the right.'
         r.Play :digits => enter_tone
-        # sms_create("Guest code was used", ENV['CELL'])
+        # sms_create('Guest code was used', ENV['CELL'])
       end.text
     elsif user_pushed.eql? delivery_code
       Twilio::TwiML::Response.new do |r|
-        r.Say "Thanks, door opening."
+        r.Say 'Thanks, door opening.'
         r.Play :digits => enter_tone
-        # sms_create("Delivery code - something is here?", ENV['CELL'])
+        # sms_create('Delivery code - something is here?', ENV['CELL'])
       end.text
     else
       Twilio::TwiML::Response.new do |r|
-        r.Say "Sorry Punk, stay out in the cold."
-        # sms_create("Some punk found menu 6", ENV['CELL'])
+        r.Say 'Sorry Punk, stay out in the cold.'
+        # sms_create('Some punk found menu 6', ENV['CELL'])
       end.text
     end
   end
