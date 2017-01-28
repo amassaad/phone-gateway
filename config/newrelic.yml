@@ -10,7 +10,7 @@ common: &default_settings
       auto_instrument: true
   audit_log:
     enabled: false
-  capture_params: false
+  capture_params: true
   transaction_tracer:
     enabled: true
     transaction_threshold: apdex_f
