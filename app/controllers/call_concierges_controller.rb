@@ -1,39 +1,45 @@
 class CallConciergesController < ApplicationController
   @counter = 0
   @bypass = false
-  @dead_caller = 0
+  # @dead_caller = 0
 
   ROOT_PATH = 'https://york-phone-gateway.herokuapp.com'.freeze
 
   def pizza
-    @bypass = true
+    # @bypass = true
+    Concierge.first.update(bypass: 1)
 
     render html: 'OK.
     <img style="-webkit-user-select: none; cursor: zoom-in;" src="https://cdn.shopify.com/s/files/1/0196/8346/files/Supreme_pizza.png?7139639298543844503">'.html_safe
   end
 
   def near
-    @bypass = true
+    # @bypass = true
+    Concierge.first.update(bypass: 1)
+
     render html: 'OK'
   end
 
   def inbound_call
-    @dead_caller = 1
+    #TODO remove this
+    # Concierge.first.update(dead_caller: 1)
 
     if Time.now.thursday? && Time.now.getlocal("-05:00").hour.between?(8, 9) && Time.now.min.between?( 42 , 59 ) or Time.now.min.between?( 0, 5 )
       puts 'arrived'
       bypass = true
+      Concierge.first.update(bypass: 1)
     end
 
     Twilio::TwiML::Response.new do |r|
-      if bypass
+      if Concierge.first.bypass?
         r.Say 'Please enter.'
         sms_create('The bypass code was used.', ENV['CELL'])
         r.Redirect ROOT_PATH + '/call_concierges/entry_code?Digits=4321'
       else
-        if @counter == 0
+        if Concierge.first.counter == 0
           sms_create('The door was buzzed.', ENV['CELL'])
-          @counter += 1
+          # @counter += 1
+          Concierge.first.counter += 1
         end
         r.Gather :numDigits => '1', :action => '/call_concierges/inboud_call_handler', :method => 'get' do |g|
           g.Play s3_url('welcome_to_york')
@@ -54,10 +60,12 @@ class CallConciergesController < ApplicationController
           if Time.now.getlocal('-05:00').hour.between?(7, 19)
             r.Play s3_url('you_may_enter_but_I_am_not_home_now')
             r.Redirect ROOT_PATH + '/call_concierges/entry_code?Digits=8297'
-            @bypass = false
+            # @bypass = false
+            Concierge.first.update(bypass: 0)
           else
             r.Redirect ROOT_PATH + '/call_concierges/entry_code?Digits=2'
-            @bypass = false
+            # @bypass = false
+            Concierge.first.update(bypass: 0)
           end
         end.text
       when "2"
@@ -131,7 +139,9 @@ class CallConciergesController < ApplicationController
     guest_code = '4321'
     delivery_code = '8297'
     enter_tone = 'www99'
-    @bypass = false
+    # @bypass = false
+    Concierge.first.update(bypass: 0)
+
 
     if user_pushed.eql? secret_code
       Twilio::TwiML::Response.new do |r|

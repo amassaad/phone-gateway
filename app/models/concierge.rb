@@ -1,0 +1,2 @@
+class Concierge < ApplicationRecord
+end
