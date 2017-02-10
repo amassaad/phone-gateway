@@ -3,9 +3,7 @@
 one:
   counter: 1
   bypass: 1
-  dead_caller: 1
 
 two:
   counter: 1
   bypass: 1
-  dead_caller: 1

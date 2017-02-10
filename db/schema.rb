@@ -18,9 +18,8 @@ ActiveRecord::Schema.define(version: 20170205163402) do
   create_table "concierges", force: :cascade do |t|
     t.integer  "counter"
     t.integer  "bypass"
-    t.integer  "dead_caller"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
 end
