@@ -5,4 +5,4 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
-Concierge.create(counter: 0, bypass: 0, dead_caller: 0 )
+Concierge.create(counter: 0, bypass: 0)
