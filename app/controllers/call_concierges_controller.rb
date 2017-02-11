@@ -1,7 +1,4 @@
 class CallConciergesController < ApplicationController
-  @counter = 0
-  @bypass = false
-
   ROOT_PATH = 'https://york-phone-gateway.herokuapp.com'.freeze
 
   def pizza
@@ -163,24 +160,26 @@ class CallConciergesController < ApplicationController
   end
 
   private
-    def s3_url(name)
-      "https://s3-us-west-2.amazonaws.com/yorkphonegateway/#{name}.wav"
-    end
 
-    def sms_create(body, to)
-      if Rails.env.production?
-        from = ENV['TWILIOFROM']
+  def sms_create(body, to)
+    if Rails.env.production?
+      from = ENV['TWILIOFROM']
+      @twilio_client = Twilio::REST::Client.new(ENV['TSID'], ENV['TTOKEN'])
 
-        @twilio_client.account.messages.create(
-          :body => body,
-          :to => to,
-          :from => from
-        )
-      elsif Rails.env.development?
-        puts "I'm sms create in development mode. Body: #{body}"
-      else
-        # puts "I'm an SMS in I-dont-know-lol or litering gross text into test mode.🤢
-        # "
-      end
+      @twilio_client.account.messages.create({
+        :body => body,
+        :to => to,
+        :from => from
+      })
+    elsif Rails.env.development?
+      puts "I'm sms create in development mode. Body: #{body}"
+    else
+      # puts "I'm an SMS in I-dont-know-lol or litering gross text into test mode.🤢
+      # "
     end
+  end
+
+  def s3_url(name)
+    "https://s3-us-west-2.amazonaws.com/yorkphonegateway/#{name}.wav"
+  end
 end
