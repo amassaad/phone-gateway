@@ -37,7 +37,7 @@ class CallConciergesController < ApplicationController
 
       r.Redirect(ROOT_PATH + '/call_concierges/inboud_call_handler')
     end
-    render text: @response.text
+    render plain: @response.text
   end
 
   def inboud_call_handler
@@ -107,7 +107,7 @@ class CallConciergesController < ApplicationController
         r.Redirect ROOT_PATH + '/call_concierges/inbound_call'
       end
     end
-    render text: @response.text
+    render plain: @response.text
   end
 
   def extension
@@ -118,7 +118,7 @@ class CallConciergesController < ApplicationController
         r.Dial ENV['CELL']
         r.Say 'The party you are trying to reach is unavailable or has hung up. Goodbye.'
       end
-      render text: @response.text
+      render plain: @response.text
     end
   end
 
@@ -156,7 +156,7 @@ class CallConciergesController < ApplicationController
         sms_create('Some punk found menu 6', ENV['CELL'])
       end
     end
-    render text: @response.text
+    render plain: @response.text
   end
 
   private
