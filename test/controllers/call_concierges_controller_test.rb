@@ -3,17 +3,21 @@ require 'test_helper'
 class CallConciergesControllerTest < ActionDispatch::IntegrationTest
   include StatsD::Instrument::Assertions
 
-  test "should get pizza" do
+  test "should get pizza and set bypass correctly" do
+    assert 0, Concierge.first.bypass
     assert_statsd_gauge('callcontroller.pizza') do
       get call_concierges_pizza_url
     end
+    assert 1, Concierge.first.bypass
     assert_response :success
   end
 
-  test "should get near" do
+  test "should get near and set bypass correctly" do
+    assert 0, Concierge.first.bypass
     assert_statsd_gauge('callcontroller.near') do
       get call_concierges_near_url
     end
+    assert 1, Concierge.first.bypass
     assert_response :success
   end
 
@@ -37,10 +41,10 @@ class CallConciergesControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
-  test "inbound_call should produce valid xml" do
+  test "Should open door when its time for cleaning" do
+    Timecop.freeze(Time.gm(2014, 2, 20, 13, 52, 1))
     get call_concierges_inbound_call_url
-    # byebug
-    doc = Nokogiri::XML(@response.body)
-    assert_empty doc.errors
+    assert_equal 1, Concierge.first.bypass
+    Timecop.return
   end
 end

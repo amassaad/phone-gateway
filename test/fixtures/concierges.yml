@@ -1,9 +1,6 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  counter: 1
-  bypass: 1
+  counter: 0
+  bypass: 0
 
-two:
-  counter: 1
-  bypass: 1

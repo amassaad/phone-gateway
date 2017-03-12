@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite time='0.032140' skipped='0' failures='0' errors='0' name="ConciergeTest" assertions='4' tests='2'>
-  <testcase time='0.031400' file="test/models/concierge_test.rb" name="test_can_set_bypass" assertions='2'>
+<testsuite time='0.001832' skipped='0' failures='0' errors='0' name="ConciergeTest" assertions='4' tests='2'>
+  <testcase time='0.000932' file="test/models/concierge_test.rb" name="test_can_set_bypass" assertions='2'>
   </testcase>
-  <testcase time='0.000740' file="test/models/concierge_test.rb" name="test_can_set_counter" assertions='2'>
+  <testcase time='0.000900' file="test/models/concierge_test.rb" name="test_can_set_counter" assertions='2'>
   </testcase>
 </testsuite>

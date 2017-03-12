@@ -1,19 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite time='0.213739' skipped='0' failures='1' errors='0' name="CallConciergesControllerTest" assertions='13' tests='7'>
-  <testcase time='0.187011' file="test/controllers/call_concierges_controller_test.rb" name="test_inbound_call_should_produce_valid_xml" assertions='2'>
+<testsuite time='0.285150' skipped='0' failures='0' errors='0' name="CallConciergesControllerTest" assertions='21' tests='7'>
+  <testcase time='0.254487' file="test/controllers/call_concierges_controller_test.rb" name="test_should_get_pizza_and_set_bypass_correctly" assertions='8'>
   </testcase>
-  <testcase time='0.005896' file="test/controllers/call_concierges_controller_test.rb" name="test_should_get_pizza" assertions='6'>
+  <testcase time='0.008172' file="test/controllers/call_concierges_controller_test.rb" name="test_Should_open_door_when_its_time_for_cleaning" assertions='1'>
   </testcase>
-  <testcase time='0.002679' file="test/controllers/call_concierges_controller_test.rb" name="test_should_get_extension" assertions='1'>
+  <testcase time='0.009787' file="test/controllers/call_concierges_controller_test.rb" name="test_should_get_near_and_set_bypass_correctly" assertions='8'>
   </testcase>
-  <testcase time='0.002456' file="test/controllers/call_concierges_controller_test.rb" name="test_should_get_inboud_call_handler" assertions='1'>
+  <testcase time='0.002539' file="test/controllers/call_concierges_controller_test.rb" name="test_should_get_extension" assertions='1'>
   </testcase>
-  <testcase time='0.006090' file="test/controllers/call_concierges_controller_test.rb" name="test_should_get_near" assertions='1'>
-    <failure type='Minitest::Assertion' message="No StatsD calls for metric phone-gateway.ottawa.callcontroller.pizza of type g were made.">test/controllers/call_concierges_controller_test.rb:14:in `block in &lt;class:CallConciergesControllerTest&gt;&#39;
-    </failure>
+  <testcase time='0.002052' file="test/controllers/call_concierges_controller_test.rb" name="test_should_get_inboud_call_handler" assertions='1'>
   </testcase>
-  <testcase time='0.003310' file="test/controllers/call_concierges_controller_test.rb" name="test_should_get_inbound_call" assertions='1'>
+  <testcase time='0.003289' file="test/controllers/call_concierges_controller_test.rb" name="test_should_get_inbound_call" assertions='1'>
   </testcase>
-  <testcase time='0.006297' file="test/controllers/call_concierges_controller_test.rb" name="test_should_get_entry_code" assertions='1'>
+  <testcase time='0.004824' file="test/controllers/call_concierges_controller_test.rb" name="test_should_get_entry_code" assertions='1'>
   </testcase>
 </testsuite>
