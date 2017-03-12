@@ -32,6 +32,7 @@ class CallConciergesController < ApplicationController
       if Concierge.first.counter == 0
         @res = Twilio::TwiML::Response.new do |r|
           sms_create('The door was buzzed.', ENV['CELL'])
+          sms_create('The door was buzzed.', ENV['V_CELL'])
           Concierge.first.counter += 1
           r.Gather(:numDigits => '1', :action => ROOT_PATH + '/call_concierges/inbound_call_handler', :method => 'get') do |g|
             g.Play(s3_url('welcome_to_york'))
@@ -183,7 +184,7 @@ class CallConciergesController < ApplicationController
         @twilio_client = Twilio::REST::Client.new(ENV['TSID'], ENV['TTOKEN'])
 
         @twilio_client.account.messages.create({
-          :body => body,
+          :body => '[🚪doorbell 🔔] ' + body,
           :to => to,
           :from => FROM
         })
