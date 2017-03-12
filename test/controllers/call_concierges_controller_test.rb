@@ -1,13 +1,19 @@
 require 'test_helper'
-# require 'nokogiri'
+
 class CallConciergesControllerTest < ActionDispatch::IntegrationTest
+  include StatsD::Instrument::Assertions
+
   test "should get pizza" do
-    get call_concierges_pizza_url
+    assert_statsd_gauge('callcontroller.pizza') do
+      get call_concierges_pizza_url
+    end
     assert_response :success
   end
 
   test "should get near" do
-    get call_concierges_near_url
+    assert_statsd_gauge('callcontroller.near') do
+      get call_concierges_near_url
+    end
     assert_response :success
   end
 
