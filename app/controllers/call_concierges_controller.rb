@@ -184,7 +184,7 @@ class CallConciergesController < ApplicationController
         @twilio_client = Twilio::REST::Client.new(ENV['TSID'], ENV['TTOKEN'])
 
         @twilio_client.account.messages.create({
-          :body => '🚪doorbell 🔔' + body,
+          :body => '[🚪doorbell 🔔] ' + body,
           :to => to,
           :from => FROM
         })

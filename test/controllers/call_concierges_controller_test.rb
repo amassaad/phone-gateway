@@ -1,8 +1,6 @@
 require 'test_helper'
 
 class CallConciergesControllerTest < ActionDispatch::IntegrationTest
-  include StatsD::Instrument::Assertions
-
   test "should get pizza and set bypass correctly" do
     assert 0, Concierge.first.bypass
     assert_statsd_gauge('callcontroller.pizza') do
