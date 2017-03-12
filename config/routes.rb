@@ -5,11 +5,12 @@ Rails.application.routes.draw do
 
   get 'call_concierges/inbound_call'
 
-  get 'call_concierges/inboud_call_handler'
+  get 'call_concierges/inbound_call_handler'
 
   get 'call_concierges/extension'
 
   get 'call_concierges/entry_code'
+  post 'call_concierges/entry_code'
 
   root 'welcome#index'
 end
