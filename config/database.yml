@@ -75,11 +75,5 @@ test:
 #
 # You can use this database configuration with:
 #
-#   production:
-#     url: <%= ENV['DATABASE_URL'] %>
-#
 production:
-  <<: *default
-  database: phone-gateway_production
-  username: phone-gateway
-  password: <%= ENV['PHONE-GATEWAY_DATABASE_PASSWORD'] %>
+  url: <%= ENV['DATABASE_URL'] %>
