@@ -1,6 +1,5 @@
 class CallConciergesController < ApplicationController
-  # ROOT_PATH = 'https://york-phone-gateway.herokuapp.com'.freeze
-  ROOT_PATH = 'https://5627dde9.ngrok.io'.freeze
+  ROOT_PATH = 'https://york-phone-gateway.herokuapp.com'.freeze
   FROM = ENV['TWILIOFROM'].freeze
 
   def pizza
