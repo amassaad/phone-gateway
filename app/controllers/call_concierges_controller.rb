@@ -22,7 +22,6 @@ class CallConciergesController < ApplicationController
         StatsD.gauge('callcontroller.cleaning_bypass_update', 1)
       end
 
-
       @res = Twilio::TwiML::Response.new do |r|
         r.Redirect(ROOT_PATH + '/call_concierges/inbound_call')
         r.Say('Sorry, I didnt get your response')

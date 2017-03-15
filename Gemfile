@@ -34,6 +34,7 @@ gem 'twilio-ruby'
 gem 'figaro'
 gem 'newrelic_rpm'
 gem 'statsd-instrument'
+gem 'bugsnag'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
