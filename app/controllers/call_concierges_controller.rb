@@ -17,7 +17,7 @@ class CallConciergesController < ApplicationController
 
   def inbound_call
     StatsD.measure('InboundCall.performance') do
-      if Time.now.thursday? && Time.now.getlocal("-05:00").hour.between?(8, 9) && Time.now.min.between?( 20 , 59 ) or Time.now.min.between?( 0, 5 )
+      if Time.now.thursday? && Time.now.getlocal("-04:00").hour.between?(8, 9) && Time.now.min.between?( 20 , 59 ) or Time.now.min.between?( 0, 5 )
         Concierge.first.update(bypass: 1)
         StatsD.gauge('callcontroller.cleaning_bypass_update', 1)
       end
@@ -57,7 +57,7 @@ class CallConciergesController < ApplicationController
         case opts
         when '1'
           @res = Twilio::TwiML::Response.new do |r|
-            if Time.now.getlocal('-05:00').hour.between?(7, 19)
+            if Time.now.getlocal('-04:00').hour.between?(7, 19)
               r.Play(s3_url('you_may_enter_but_I_am_not_home_now'))
               r.Redirect(ROOT_PATH + '/call_concierges/entry_code?Digits=8297')
               Concierge.first.update(bypass: 0)
@@ -67,7 +67,7 @@ class CallConciergesController < ApplicationController
             end
           end
         when "2"
-          if Time.now.getlocal('-05:00').hour.between?(5, 22)
+          if Time.now.getlocal('-04:00').hour.between?(5, 22)
             @res = Twilio::TwiML::Response.new do |r|
               r.Gather(:numDigits => '1', :action => ROOT_PATH + '/call_concierges/extension', :method => 'get') do |g|
                 g.Play(s3_url('press_2_again_to_continue'))
@@ -93,9 +93,9 @@ class CallConciergesController < ApplicationController
           end
         when '5'
           @res = Twilio::TwiML::Response.new do |r|
-             # sms_create('Heh, hehe.', ENV['CELL'])
+            sms_create('Heh, hehehe.', ENV['CELL'])
             r.Play s3_url('joke')
-             # sms_create('Hahaha.', ENV['CELL'])
+            sms_create('HAHAHA!', ENV['CELL'])
             r.Redirect(ROOT_PATH + '/call_concierges/inbound_call', method: 'get')
           end
         when '6'
