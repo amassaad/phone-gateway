@@ -9,7 +9,7 @@ Rails.application.routes.draw do
 
   get 'call_concierges/extension'
 
-  get 'call_concierges/entry_code'
+  get  'call_concierges/entry_code'
   post 'call_concierges/entry_code'
 
   root 'welcome#index'
