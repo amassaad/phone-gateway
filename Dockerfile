@@ -8,3 +8,10 @@ ADD Gemfile.lock /phone-gateway/Gemfile.lock
 
 RUN bundle install
 ADD . /phone-gateway
+
+# Precompile assets
+RUN RAILS_ENV=production bundle exec rake assets:precompile --trace
+
+# Begin
+
+CMD bundle exec rails s -p 80 -b '0.0.0.0'
