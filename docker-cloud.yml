@@ -1,0 +1,13 @@
+db:
+  image: 'postgres:latest'
+  restart: always
+
+york-phone-gateway:
+  image: 'ieee1394/phone-gateway:latest'
+  autoredeploy: true
+  restart: always
+  autodestroy: always
+  links:
+    - db
+  ports:
+    - '3000:3000'
