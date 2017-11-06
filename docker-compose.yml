@@ -4,9 +4,6 @@ services:
   db:
     image: postgres
   web:
-    build: .
-    volumes:
-      - .:/phone-gateway
     ports:
       - "3000"
     depends_on:

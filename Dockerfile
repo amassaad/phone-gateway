@@ -15,4 +15,4 @@ RUN RAILS_ENV=production bundle exec rake assets:precompile --trace
 EXPOSE 3000
 # Begin
 
-CMD bundle exec rails s
+CMD bundle exec rails server -b 0.0.0.0
