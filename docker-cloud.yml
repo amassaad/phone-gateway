@@ -1,6 +1,8 @@
 db:
   image: 'postgres:latest'
   restart: always
+  environment:
+    - POSTGRES_PASSWORD=foobar
 
 york-phone-gateway:
   image: 'ieee1394/phone-gateway:latest'
@@ -11,3 +13,10 @@ york-phone-gateway:
     - db
   ports:
     - '3000:3000'
+  environment:
+    - RAILS_ENV=production
+    - RAILS_MAX_THREADS=5
+    - SECRET_KEY_BASE=foobar
+    - DB_HOST=db
+    - DB_USER=postgres
+    - DB_PASSWORD=foobar
