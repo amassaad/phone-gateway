@@ -1,6 +1,6 @@
 class CallConciergesController < ApplicationController
   ROOT_PATH = 'https://york-phone-gateway.herokuapp.com'
-  FROM = '+1613' + ENV['TWILIOFROM']
+  FROM = ENV['TWILIOFROM']
 
   def pizza
     Concierge.first.update(bypass: 1)
@@ -29,8 +29,8 @@ class CallConciergesController < ApplicationController
 
       if Concierge.first.counter == 0
         @res = Twilio::TwiML::Response.new do |r|
-          sms_create('The door was buzzed.', '+1613' + ENV['CELL'])
-          sms_create('The door was buzzed.', '+1613' + ENV['V_CELL'])
+          sms_create('The door was buzzed.', ENV['CELL'])
+          sms_create('The door was buzzed.', ENV['V_CELL'])
           Concierge.first.counter += 1
           r.Gather(:numDigits => '1', :action => ROOT_PATH + '/call_concierges/inbound_call_handler', :method => 'get') do |g|
             g.Play(s3_url('welcome_to_york'))
@@ -187,9 +187,6 @@ class CallConciergesController < ApplicationController
         })
       elsif Rails.env.development?
         puts "I'm sms create in development mode. Body: #{body}"
-      else
-        # puts "I'm an SMS in I-dont-know-lol or litering gross text into test mode.🤢
-        # "
       end
     end
   end

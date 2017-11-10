@@ -12,7 +12,7 @@ ADD . /phone-gateway
 # Precompile assets
 RUN RAILS_ENV=production bundle exec rake assets:precompile --trace
 
-EXPOSE 3000
+EXPOSE 29818
 # Begin
 
 CMD 'scripts/startup.sh'
