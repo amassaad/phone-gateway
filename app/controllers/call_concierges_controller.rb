@@ -1,5 +1,5 @@
 class CallConciergesController < ApplicationController
-  ROOT_PATH = 'https://york-phone-gateway.herokuapp.com'
+  ROOT_PATH = ENV['PHONE_HOST']
   FROM = ENV['TWILIOFROM']
 
   def pizza
