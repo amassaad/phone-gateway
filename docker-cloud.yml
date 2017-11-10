@@ -1,22 +1,26 @@
-db:
-  image: 'postgres:latest'
-  restart: always
+phone-gateway-db:
   environment:
     - POSTGRES_PASSWORD=foobar
-
-york-phone-gateway:
-  image: 'ieee1394/phone-gateway:latest'
-  autoredeploy: true
+  image: 'postgres:latest'
   restart: always
-  autodestroy: always
-  links:
-    - db
-  ports:
-    - '3000:3000'
+york-phone-gateway:
+  autoredeploy: true
   environment:
+    - DB_HOST=phone-gateway-db
+    - DB_PASSWORD=foobar
+    - DB_USER=postgres
     - RAILS_ENV=production
     - RAILS_MAX_THREADS=5
     - SECRET_KEY_BASE=foobar
-    - DB_HOST=db
-    - DB_USER=postgres
-    - DB_PASSWORD=foobar
+    - CELL=stuff
+    - VCELL=stuff
+    - TSID=your-sid
+    - TTOKEN=some-token
+    - TWILIOFROM=from
+    - BUGSNAG=bugs
+  image: 'ieee1394/phone-gateway:latest'
+  links:
+    - phone-gateway-db
+  ports:
+    - '3000:3000'
+  restart: always
