@@ -1,6 +1,6 @@
 class CallConciergesController < ApplicationController
-  ROOT_PATH = 'https://york-phone-gateway.herokuapp.com'.freeze
-  FROM = ENV['TWILIOFROM'].freeze
+  ROOT_PATH = 'https://york-phone-gateway.herokuapp.com'
+  FROM = '+1613' + ENV['TWILIOFROM']
 
   def pizza
     Concierge.first.update(bypass: 1)
