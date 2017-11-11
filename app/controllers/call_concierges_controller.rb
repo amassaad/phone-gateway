@@ -1,6 +1,6 @@
 class CallConciergesController < ApplicationController
-  ROOT_PATH = ENV['PHONE_HOST']
-  FROM = ENV['TWILIOFROM']
+  ROOT_PATH = ENV['PHONE_HOST'] || 'http://www.test.com'
+  FROM = ENV['TWILIOFROM'] || '+18005555555'
 
   def pizza
     Concierge.first.update(bypass: 1)
