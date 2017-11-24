@@ -46,7 +46,7 @@ class CallConciergesController < ApplicationController
         end
       end
 
-      render text: @res.text
+      render xml: @res.to_xml
     end
   end
 
@@ -122,7 +122,7 @@ class CallConciergesController < ApplicationController
           r.Redirect ROOT_PATH + '/call_concierges/inbound_call'
         end
       end
-      render text: @res.text
+      render xml: @res.to_xml
     end
   end
 
@@ -135,7 +135,7 @@ class CallConciergesController < ApplicationController
         end
         r.Say 'The party you are trying to reach is unavailable or has hung up. Goodbye.'
       end
-      render text: @res.text
+      render xml: @res.to_xml
     end
   end
 
@@ -170,7 +170,7 @@ class CallConciergesController < ApplicationController
         sms_create('Some punk found menu 6', ENV['CELL'])
       end
     end
-    render text: @res.text
+    render xml: @res.to_xml
   end
 
   private
