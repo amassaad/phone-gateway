@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class CallConciergesControllerTest < ActionDispatch::IntegrationTest
-  test "should get pizza and set bypass correctly" do
+  test 'should get pizza and set bypass correctly' do
     assert 0, Concierge.first.bypass
     assert_statsd_gauge('callcontroller.pizza') do
       get call_concierges_pizza_url
@@ -10,7 +10,12 @@ class CallConciergesControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
-  test "should get near and set bypass correctly" do
+  test 'when getting pizza it should include a confirmation OK' do
+    get call_concierges_pizza_url
+    assert_select 'p', 'OK.'
+  end
+
+  test 'should get near and set bypass correctly' do
     assert 0, Concierge.first.bypass
     assert_statsd_gauge('callcontroller.near') do
       get call_concierges_near_url
@@ -19,27 +24,27 @@ class CallConciergesControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
-  test "should get inbound_call" do
+  test 'should get inbound_call' do
     get call_concierges_inbound_call_url
     assert_response :success
   end
 
-  test "should get inboud_call_handler" do
+  test 'should get inboud_call_handler' do
     get call_concierges_inbound_call_handler_url
     assert_response :success
   end
 
-  test "should get extension" do
+  test 'should get extension' do
     get call_concierges_extension_url
     assert_response :success
   end
 
-  test "should get entry_code" do
+  test 'should get entry_code' do
     get call_concierges_entry_code_url
     assert_response :success
   end
 
-  test "Should open door when its time for cleaning" do
+  test 'Should open door when its time for cleaning' do
     Timecop.freeze(Time.gm(2014, 2, 20, 13, 52, 1))
     get call_concierges_inbound_call_url
     assert_equal 1, Concierge.first.bypass
