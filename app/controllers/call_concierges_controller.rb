@@ -59,77 +59,78 @@ class CallConciergesController < ApplicationController
 
   def inbound_call_handler
     StatsD.measure('InboundCallHandler.performance') do
-      return unless params['Digits']
-      opts = params['Digits']
-      case opts
-      when '1'
-        @res = Twilio::TwiML::VoiceResponse.new do |r|
-          if Time.now.getlocal('-04:00').hour.between?(7, 19)
-            r.play(url: s3_url('you_may_enter_but_I_am_not_home_now'))
-            r.redirect(ROOT_PATH + '/call_concierges/entry_code?Digits=8297')
-            Concierge.first.update(bypass: 0)
-          else
-            r.redirect(ROOT_PATH + '/call_concierges/entry_code?Digits=2')
-            Concierge.first.update(bypass: 0)
-          end
-        end
-      when '2'
-        if Time.now.getlocal('-04:00').hour.between?(5, 22)
+      if params['Digits']
+        opts = params['Digits']
+        case opts
+        when '1'
           @res = Twilio::TwiML::VoiceResponse.new do |r|
-            r.gather(numDigits: '1', action: ROOT_PATH + '/call_concierges/extension', method: 'get') do |g|
-              g.play(url: s3_url('press_2_again_to_continue'))
+            if Time.now.getlocal('-04:00').hour.between?(7, 19)
+              r.play(url: s3_url('you_may_enter_but_I_am_not_home_now'))
+              r.redirect(ROOT_PATH + '/call_concierges/entry_code?Digits=8297')
+              Concierge.first.update(bypass: 0)
+            else
+              r.redirect(ROOT_PATH + '/call_concierges/entry_code?Digits=2')
+              Concierge.first.update(bypass: 0)
             end
-            r.play(url: s3_url('sorry_I_didnt_get_your_response'))
-            r.redirect(ROOT_PATH + '/call_concierges/inbound_call_handler?Digits=2')
+          end
+        when '2'
+          if Time.now.getlocal('-04:00').hour.between?(5, 22)
+            @res = Twilio::TwiML::VoiceResponse.new do |r|
+              r.gather(numDigits: '1', action: ROOT_PATH + '/call_concierges/extension', method: 'get') do |g|
+                g.play(url: s3_url('press_2_again_to_continue'))
+              end
+              r.play(url: s3_url('sorry_I_didnt_get_your_response'))
+              r.redirect(ROOT_PATH + '/call_concierges/inbound_call_handler?Digits=2')
+            end
+          else
+            @res = Twilio::TwiML::VoiceResponse.new do |r|
+              r.say "Sorry, its late here."
+              r.hangup
+            end
+          end
+        when '3'
+          @res = Twilio::TwiML::VoiceResponse.new do |r|
+            r.play s3_url('you_will_be_disconnected')
+            r.hangup
+          end
+        when '4'
+          @res = Twilio::TwiML::VoiceResponse.new do |r|
+            r.play s3_url('option_four_is_not_yet_built')
+            r.redirect(ROOT_PATH + '/call_concierges/inbound_call', method: 'get')
+          end
+        when '5'
+          @res = Twilio::TwiML::VoiceResponse.new do |r|
+            sms_create('Heh, hehehe.', ENV['CELL'])
+            r.play s3_url('joke')
+            sms_create('HAHAHA!', ENV['CELL'])
+            r.redirect(ROOT_PATH + '/call_concierges/inbound_call', method: 'get')
+          end
+        when '6'
+          @res = Twilio::TwiML::VoiceResponse.new do |r|
+            r.gather numDigits: '4', action: ROOT_PATH + '/call_concierges/entry_code', method: 'get' do |g|
+              g.play s3_url('please_enter_the_secret_code')
+            end
+            r.play s3_url('sorry_I_didnt_get_your_response')
+            r.redirect ROOT_PATH + '/call_concierges/inbound_call_handler?Digits=6'
+          end
+        when '7'
+          @res = Twilio::TwiML::VoiceResponse.new do |r|
+            r.redirect 'http://twimlets.com/holdmusic?Bucket=com.twilio.music.ambient'
           end
         else
           @res = Twilio::TwiML::VoiceResponse.new do |r|
-            r.say "Sorry, its late here."
-            r.hangup
+            r.say "Was this not fun? . . Let's play again."
+            r.redirect ROOT_PATH + '/call_concierges/inbound_call_handler'
           end
-        end
-      when '3'
-        @res = Twilio::TwiML::VoiceResponse.new do |r|
-          r.play s3_url('you_will_be_disconnected')
-          r.hangup
-        end
-      when '4'
-        @res = Twilio::TwiML::VoiceResponse.new do |r|
-          r.play s3_url('option_four_is_not_yet_built')
-          r.redirect(ROOT_PATH + '/call_concierges/inbound_call', method: 'get')
-        end
-      when '5'
-        @res = Twilio::TwiML::VoiceResponse.new do |r|
-          sms_create('Heh, hehehe.', ENV['CELL'])
-          r.play s3_url('joke')
-          sms_create('HAHAHA!', ENV['CELL'])
-          r.redirect(ROOT_PATH + '/call_concierges/inbound_call', method: 'get')
-        end
-      when '6'
-        @res = Twilio::TwiML::VoiceResponse.new do |r|
-          r.gather numDigits: '4', action: ROOT_PATH + '/call_concierges/entry_code', method: 'get' do |g|
-            g.play s3_url('please_enter_the_secret_code')
-          end
-          r.play s3_url('sorry_I_didnt_get_your_response')
-          r.redirect ROOT_PATH + '/call_concierges/inbound_call_handler?Digits=6'
-        end
-      when '7'
-        @res = Twilio::TwiML::VoiceResponse.new do |r|
-          r.redirect 'http://twimlets.com/holdmusic?Bucket=com.twilio.music.ambient'
         end
       else
         @res = Twilio::TwiML::VoiceResponse.new do |r|
-          r.say "Was this not fun? . . Let's play again."
-          r.redirect ROOT_PATH + '/call_concierges/inbound_call_handler'
+          r.play(url: s3_url('sorry_I_didnt_get_your_response'))
+          r.redirect ROOT_PATH + '/call_concierges/inbound_call'
         end
       end
-    else
-      @res = Twilio::TwiML::VoiceResponse.new do |r|
-        r.play(url: s3_url('sorry_I_didnt_get_your_response'))
-        r.redirect ROOT_PATH + '/call_concierges/inbound_call'
-      end
+      render xml: @res.to_xml
     end
-    render xml: @res.to_xml
   end
 
   def extension
