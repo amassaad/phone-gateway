@@ -40,8 +40,11 @@ class CallConciergesController < ApplicationController
   end
 
   def check_for_cleaning_time
-    return unless Time.now.thursday? && Time.now.getlocal('-04:00').hour.between?(8, 9) &&
-    Time.now.min.between?(20, 59) || Time.now.min.between?(0, 5)
+    return unless
+    Time.now.thursday? &&
+    Time.now.getlocal('-04:00').hour.between?(8, 9) &&
+    Time.now.min.between?(20, 59) ||
+    Time.now.min.between?(0, 5)
 
     Concierge.first.update(bypass: 1)
     StatsD.gauge('callcontroller.cleaning_bypass_update', 1)
