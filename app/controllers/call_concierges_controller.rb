@@ -5,8 +5,9 @@ class CallConciergesController < ApplicationController
   def pizza
     Concierge.first.update(bypass: 1)
     StatsD.gauge('callcontroller.pizza', 1)
-    render html: 'OK.
-    <img style="-webkit-user-select: none; cursor: zoom-in;" src="https://cdn.shopify.com/s/files/1/0196/8346/files/Supreme_pizza.png?7139639298543844503">'.html_safe
+    render html: '<p>OK.</p>
+    <img style="-webkit-user-select: none; cursor: zoom-in;"
+    src="https://cdn.shopify.com/s/files/1/0196/8346/files/Supreme_pizza.png?7139639298543844503">'.html_safe
   end
 
   def near
@@ -39,7 +40,8 @@ class CallConciergesController < ApplicationController
   end
 
   def check_for_cleaning_time
-    return unless Time.now.thursday? && Time.now.getlocal('-04:00').hour.between?(8, 9) && Time.now.min.between?(20, 59) || Time.now.min.between?(0, 5)
+    return unless Time.now.thursday? && Time.now.getlocal('-04:00').hour.between?(8, 9) &&
+    Time.now.min.between?(20, 59) || Time.now.min.between?(0, 5)
 
     Concierge.first.update(bypass: 1)
     StatsD.gauge('callcontroller.cleaning_bypass_update', 1)
@@ -51,7 +53,7 @@ class CallConciergesController < ApplicationController
       sms_create('The door was buzzed.', ENV['CELL'])
       sms_create('The door was buzzed.', ENV['V_CELL'])
       Concierge.first.counter += 1
-      r.gather(:numDigits => '1', :action => ROOT_PATH + '/call_concierges/inbound_call_handler', :method => 'get') do |g|
+      r.gather(numDigits: '1', action: ROOT_PATH + '/call_concierges/inbound_call_handler', method: 'get') do |g|
         g.play(url: s3_url('welcome_to_york'))
       end
     end
@@ -84,7 +86,7 @@ class CallConciergesController < ApplicationController
             end
           else
             @res = Twilio::TwiML::VoiceResponse.new do |r|
-              r.say "Sorry, its late here."
+              r.say 'Sorry, its late here.'
               r.hangup
             end
           end
@@ -119,7 +121,7 @@ class CallConciergesController < ApplicationController
           end
         else
           @res = Twilio::TwiML::VoiceResponse.new do |r|
-            r.say "Was this not fun? . . Let's play again."
+            r.say('Was this not fun? . . Lets play again.')
             r.redirect ROOT_PATH + '/call_concierges/inbound_call_handler'
           end
         end
@@ -187,11 +189,13 @@ class CallConciergesController < ApplicationController
       if Rails.env.production?
         @twilio_client = Twilio::REST::Client.new(ENV['TSID'], ENV['TTOKEN'])
 
-        @twilio_client.account.messages.create({
-          body: '[🚪doorbell 🔔] ' + body,
-          to: to,
-          from: FROM
-        })
+        @twilio_client.account.messages.create(
+          {
+            body: '[🚪doorbell 🔔] ' + body,
+            to: to,
+            from: FROM
+          }
+        )
       elsif Rails.env.development?
         puts "I'm sms create in development mode. Body: #{body}"
       end
