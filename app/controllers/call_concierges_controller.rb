@@ -160,29 +160,29 @@ class CallConciergesController < ApplicationController
     Concierge.first.update(bypass: 0)
 
     if user_pushed.eql? secret_code
-      @res = Twilio::TwiML::VoiceResponse.new do |r|
+      res = Twilio::TwiML::VoiceResponse.new do |r|
         r.say 'Code accepted. Welcome.'
         r.play digits: enter_tone
         sms_create('Your home code was used', ENV['CELL'])
       end
     elsif user_pushed.eql? near_entry_code
-      @res = Twilio::TwiML::VoiceResponse.new do |r|
+      res = Twilio::TwiML::VoiceResponse.new do |r|
         r.play digits: enter_tone
         sms_create('A near entry code was just used', ENV['CELL'])
       end
     elsif user_pushed.eql? delivery_code
-      @res = Twilio::TwiML::VoiceResponse.new do |r|
+      res = Twilio::TwiML::VoiceResponse.new do |r|
         r.say 'Door opening.'
         r.play digits: enter_tone
         sms_create('Delivery code - something is here?', ENV['CELL'])
       end
     else
-      @res = Twilio::TwiML::VoiceResponse.new do |r|
+      res = Twilio::TwiML::VoiceResponse.new do |r|
         r.say 'Sorry Punk, stay out in the cold.'
         sms_create('Some punk found menu 6', ENV['CELL'])
       end
     end
-    render xml: @res.to_xml
+    render xml: res.to_xml
   end
 
   private
@@ -192,7 +192,7 @@ class CallConciergesController < ApplicationController
       if Rails.env.production?
         @twilio_client = Twilio::REST::Client.new(ENV['TSID'], ENV['TTOKEN'])
 
-        @twilio_client.account.messages.create(
+        @twilio_client.api.account.messages.create(
           {
             body: '[🚪doorbell 🔔] ' + body,
             to: to,
