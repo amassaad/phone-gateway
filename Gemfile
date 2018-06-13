@@ -7,7 +7,6 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 
-# gem 'rails', github: 'rails/rails', tag: '5-0-stable'
 gem 'bugsnag'
 gem 'coffee-rails', '~> 4.2'
 gem 'figaro'
