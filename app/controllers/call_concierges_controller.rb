@@ -89,49 +89,49 @@ class CallConciergesController < ApplicationController
             end
           else
             @res = Twilio::TwiML::VoiceResponse.new do |r|
-              r.say 'Sorry, its late here.'
+              r.say('Sorry, its late here.')
               r.hangup
             end
           end
         when '3'
           @res = Twilio::TwiML::VoiceResponse.new do |r|
-            r.play s3_url('you_will_be_disconnected')
+            r.play(url: s3_url('you_will_be_disconnected'))
             r.hangup
           end
         when '4'
           @res = Twilio::TwiML::VoiceResponse.new do |r|
-            r.play s3_url('option_four_is_not_yet_built')
+            r.play(url: s3_url('option_four_is_not_yet_built'))
             r.redirect(ROOT_PATH + '/call_concierges/inbound_call', method: 'get')
           end
         when '5'
           @res = Twilio::TwiML::VoiceResponse.new do |r|
             sms_create('Heh, hehehe.', ENV['CELL'])
-            r.play s3_url('joke')
+            r.play(url: s3_url('joke'))
             sms_create('HAHAHA!', ENV['CELL'])
             r.redirect(ROOT_PATH + '/call_concierges/inbound_call', method: 'get')
           end
         when '6'
           @res = Twilio::TwiML::VoiceResponse.new do |r|
             r.gather numDigits: '4', action: ROOT_PATH + '/call_concierges/entry_code', method: 'get' do |g|
-              g.play s3_url('please_enter_the_secret_code')
+              g.play(url: s3_url('please_enter_the_secret_code'))
             end
-            r.play s3_url('sorry_I_didnt_get_your_response')
-            r.redirect ROOT_PATH + '/call_concierges/inbound_call_handler?Digits=6'
+            r.play(url: s3_url('sorry_I_didnt_get_your_response'))
+            r.redirect(ROOT_PATH + '/call_concierges/inbound_call_handler?Digits=6')
           end
         when '7'
           @res = Twilio::TwiML::VoiceResponse.new do |r|
-            r.redirect 'http://twimlets.com/holdmusic?Bucket=com.twilio.music.ambient'
+            r.redirect('http://twimlets.com/holdmusic?Bucket=com.twilio.music.ambient')
           end
         else
           @res = Twilio::TwiML::VoiceResponse.new do |r|
             r.say('Was this not fun? . . Lets play again.')
-            r.redirect ROOT_PATH + '/call_concierges/inbound_call_handler'
+            r.redirect(ROOT_PATH + '/call_concierges/inbound_call_handler')
           end
         end
       else
         @res = Twilio::TwiML::VoiceResponse.new do |r|
           r.play(url: s3_url('sorry_I_didnt_get_your_response'))
-          r.redirect ROOT_PATH + '/call_concierges/inbound_call'
+          r.redirect(ROOT_PATH + '/call_concierges/inbound_call')
         end
       end
       render xml: @res.to_xml
@@ -141,11 +141,11 @@ class CallConciergesController < ApplicationController
   def extension
     StatsD.measure('ExtensionDialer.performance') do
       @res = Twilio::TwiML::VoiceResponse.new do |r|
-        r.say 'Attempting to connect you, please wait.'
+        r.say('Attempting to connect you, please wait.')
         r.dial(callerId: FROM) do |d|
           d.number(ENV['CELL'])
         end
-        r.say 'The party you are trying to reach is unavailable or has hung up. Goodbye.'
+        r.say('The party you are trying to reach is unavailable or has hung up. Goodbye.')
       end
       render xml: @res.to_xml
     end
@@ -160,29 +160,29 @@ class CallConciergesController < ApplicationController
     Concierge.first.update(bypass: 0)
 
     if user_pushed.eql? secret_code
-      @res = Twilio::TwiML::VoiceResponse.new do |r|
-        r.say 'Code accepted. Welcome.'
-        r.play digits: enter_tone
+      res = Twilio::TwiML::VoiceResponse.new do |r|
+        r.say('Code accepted. Welcome.')
+        r.play(digits: enter_tone)
         sms_create('Your home code was used', ENV['CELL'])
       end
     elsif user_pushed.eql? near_entry_code
-      @res = Twilio::TwiML::VoiceResponse.new do |r|
-        r.play digits: enter_tone
+      res = Twilio::TwiML::VoiceResponse.new do |r|
+        r.play(digits: enter_tone)
         sms_create('A near entry code was just used', ENV['CELL'])
       end
     elsif user_pushed.eql? delivery_code
-      @res = Twilio::TwiML::VoiceResponse.new do |r|
-        r.say 'Door opening.'
-        r.play digits: enter_tone
+      res = Twilio::TwiML::VoiceResponse.new do |r|
+        r.say('Door opening.')
+        r.play(digits: enter_tone)
         sms_create('Delivery code - something is here?', ENV['CELL'])
       end
     else
-      @res = Twilio::TwiML::VoiceResponse.new do |r|
-        r.say 'Sorry Punk, stay out in the cold.'
+      res = Twilio::TwiML::VoiceResponse.new do |r|
+        r.say('Sorry Punk, stay out in the cold.')
         sms_create('Some punk found menu 6', ENV['CELL'])
       end
     end
-    render xml: @res.to_xml
+    render xml: res.to_xml
   end
 
   private
@@ -192,7 +192,7 @@ class CallConciergesController < ApplicationController
       if Rails.env.production?
         @twilio_client = Twilio::REST::Client.new(ENV['TSID'], ENV['TTOKEN'])
 
-        @twilio_client.account.messages.create(
+        @twilio_client.api.account.messages.create(
           {
             body: '[🚪doorbell 🔔] ' + body,
             to: to,
